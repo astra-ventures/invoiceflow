@@ -10,11 +10,18 @@ import {
   getNextInvoiceNumber,
   saveInvoice,
   getDueDateFromTerms,
+  getUnbilledTimeEntries,
+  markTimeEntriesAsBilled,
+  formatDuration,
+  generateWhatsAppLink,
+  generateSMSLink,
+  formatStripePaymentLink,
   PAYMENT_TERMS_NOTES,
   LATE_FEE_CLAUSE,
   DEFAULT_CONTRACT_TERMS,
   type Client,
   type BusinessInfo,
+  type TimeEntry,
 } from "@/lib/storage";
 
 interface LineItem {
@@ -22,6 +29,7 @@ interface LineItem {
   description: string;
   quantity: number;
   unitPrice: number;
+  timeEntryId?: string;
 }
 
 export default function CreateInvoice() {
@@ -32,6 +40,7 @@ export default function CreateInvoice() {
   const [toName, setToName] = useState("");
   const [toEmail, setToEmail] = useState("");
   const [toAddress, setToAddress] = useState("");
+  const [toPhone, setToPhone] = useState("");
   const [items, setItems] = useState<LineItem[]>([
     { id: "1", description: "", quantity: 1, unitPrice: 0 },
   ]);
@@ -44,14 +53,22 @@ export default function CreateInvoice() {
   const [showClientDropdown, setShowClientDropdown] = useState(false);
   const [saveClientChecked, setSaveClientChecked] = useState(false);
   const [businessInfoSaved, setBusinessInfoSaved] = useState(false);
-  
-  // New features
+
+  // Payment & Terms
   const [paymentTerms, setPaymentTerms] = useState("net_30");
   const [dueDate, setDueDate] = useState("");
   const [lateFeePercent, setLateFeePercent] = useState(1.5);
   const [includeLateFee, setIncludeLateFee] = useState(true);
   const [includeContractTerms, setIncludeContractTerms] = useState(false);
   const [savedInvoiceId, setSavedInvoiceId] = useState<string | null>(null);
+
+  // V2: Stripe Payment Link
+  const [stripePaymentLink, setStripePaymentLink] = useState("");
+
+  // V2: Time Entries
+  const [unbilledTime, setUnbilledTime] = useState<TimeEntry[]>([]);
+  const [selectedTimeEntries, setSelectedTimeEntries] = useState<string[]>([]);
+  const [showTimeEntries, setShowTimeEntries] = useState(false);
 
   // Load saved data on mount
   useEffect(() => {
@@ -60,14 +77,17 @@ export default function CreateInvoice() {
       setFromName(savedBusiness.name);
       setFromEmail(savedBusiness.email);
       setFromAddress(savedBusiness.address);
-      if (savedBusiness.paymentTerms) setPaymentTerms(savedBusiness.paymentTerms);
-      if (savedBusiness.lateFeePercent) setLateFeePercent(savedBusiness.lateFeePercent);
+      if (savedBusiness.paymentTerms)
+        setPaymentTerms(savedBusiness.paymentTerms);
+      if (savedBusiness.lateFeePercent)
+        setLateFeePercent(savedBusiness.lateFeePercent);
       if (savedBusiness.defaultNotes) setNotes(savedBusiness.defaultNotes);
       setBusinessInfoSaved(true);
     }
     setClients(getClients());
     setInvoiceNumber(getNextInvoiceNumber());
-    
+    setUnbilledTime(getUnbilledTimeEntries());
+
     // Set initial due date
     const initialDueDate = getDueDateFromTerms("net_30");
     setDueDate(initialDueDate.toISOString().split("T")[0]);
@@ -78,6 +98,16 @@ export default function CreateInvoice() {
     const newDueDate = getDueDateFromTerms(paymentTerms);
     setDueDate(newDueDate.toISOString().split("T")[0]);
   }, [paymentTerms]);
+
+  // Update unbilled time when client changes
+  useEffect(() => {
+    if (toName) {
+      const clientId = clients.find((c) => c.name === toName)?.id;
+      setUnbilledTime(getUnbilledTimeEntries(clientId));
+    } else {
+      setUnbilledTime(getUnbilledTimeEntries());
+    }
+  }, [toName, clients]);
 
   const handleSaveBusinessInfo = () => {
     const info: BusinessInfo = {
@@ -95,6 +125,7 @@ export default function CreateInvoice() {
     setToName(client.name);
     setToEmail(client.email);
     setToAddress(client.address);
+    setToPhone(client.phone || "");
     setShowClientDropdown(false);
   };
 
@@ -121,6 +152,31 @@ export default function CreateInvoice() {
     );
   };
 
+  const addTimeEntriesToInvoice = () => {
+    const newItems: LineItem[] = selectedTimeEntries.map((id) => {
+      const entry = unbilledTime.find((e) => e.id === id)!;
+      return {
+        id: `time-${id}`,
+        description: `${entry.projectName ? entry.projectName + ": " : ""}${entry.description} (${formatDuration(entry.durationMinutes)})`,
+        quantity: Math.round((entry.durationMinutes / 60) * 100) / 100,
+        unitPrice: entry.hourlyRate,
+        timeEntryId: id,
+      };
+    });
+
+    setItems([...items.filter((i) => i.description), ...newItems]);
+    setShowTimeEntries(false);
+    setSelectedTimeEntries([]);
+  };
+
+  const toggleTimeEntry = (id: string) => {
+    if (selectedTimeEntries.includes(id)) {
+      setSelectedTimeEntries(selectedTimeEntries.filter((e) => e !== id));
+    } else {
+      setSelectedTimeEntries([...selectedTimeEntries, id]);
+    }
+  };
+
   const subtotal = items.reduce(
     (sum, item) => sum + item.quantity * item.unitPrice,
     0
@@ -143,13 +199,13 @@ export default function CreateInvoice() {
   // Build the notes with payment terms
   const buildFullNotes = () => {
     let fullNotes = notes;
-    
+
     // Add payment terms
     const termsNote = PAYMENT_TERMS_NOTES[paymentTerms];
     if (termsNote && !fullNotes.includes(termsNote)) {
       fullNotes = termsNote + (fullNotes ? "\n\n" + fullNotes : "");
     }
-    
+
     // Add late fee clause
     if (includeLateFee && lateFeePercent > 0) {
       const lateFeeNote = LATE_FEE_CLAUSE(lateFeePercent);
@@ -157,12 +213,18 @@ export default function CreateInvoice() {
         fullNotes += "\n\n" + lateFeeNote;
       }
     }
-    
+
     // Add contract terms
     if (includeContractTerms) {
       fullNotes += "\n\n" + DEFAULT_CONTRACT_TERMS;
     }
-    
+
+    // Add Stripe payment link
+    if (stripePaymentLink) {
+      const formattedLink = formatStripePaymentLink(stripePaymentLink);
+      fullNotes += `\n\n💳 Pay Online: ${formattedLink}`;
+    }
+
     return fullNotes.trim();
   };
 
@@ -170,7 +232,7 @@ export default function CreateInvoice() {
     setLoading(true);
     try {
       const fullNotes = buildFullNotes();
-      
+
       const response = await fetch(
         "https://astra-invoice-api.onrender.com/preview",
         {
@@ -208,10 +270,16 @@ export default function CreateInvoice() {
           name: toName,
           email: toEmail,
           address: toAddress,
+          phone: toPhone,
         });
         setClients([...clients, newClient]);
         setSaveClientChecked(false);
       }
+
+      // Mark time entries as billed
+      const timeEntryIds = items
+        .filter((i) => i.timeEntryId)
+        .map((i) => i.timeEntryId!);
 
       // Save invoice to history
       const invoice = saveInvoice({
@@ -223,8 +291,17 @@ export default function CreateInvoice() {
         dueDate,
         status: "draft",
         html,
+        stripePaymentLink: stripePaymentLink
+          ? formatStripePaymentLink(stripePaymentLink)
+          : undefined,
+        timeEntryIds: timeEntryIds.length > 0 ? timeEntryIds : undefined,
       });
       setSavedInvoiceId(invoice.id);
+
+      // Mark time entries as billed after saving invoice
+      if (timeEntryIds.length > 0) {
+        markTimeEntriesAsBilled(timeEntryIds, invoice.id);
+      }
     } catch (error) {
       alert("Error generating invoice. Please try again.");
       console.error(error);
@@ -249,12 +326,14 @@ export default function CreateInvoice() {
       alert("Please enter the client's email address.");
       return;
     }
-    
-    const subject = encodeURIComponent(`Invoice ${invoiceNumber} from ${fromName}`);
-    const body = encodeURIComponent(
-      `Hi ${toName},\n\nPlease find attached invoice ${invoiceNumber} for ${formatCurrency(total)}.\n\nDue Date: ${new Date(dueDate).toLocaleDateString()}\n\nThank you for your business!\n\nBest regards,\n${fromName}`
+
+    const subject = encodeURIComponent(
+      `Invoice ${invoiceNumber} from ${fromName}`
     );
-    
+    const body = encodeURIComponent(
+      `Hi ${toName},\n\nPlease find attached invoice ${invoiceNumber} for ${formatCurrency(total)}.\n\nDue Date: ${new Date(dueDate).toLocaleDateString()}${stripePaymentLink ? `\n\nPay online: ${formatStripePaymentLink(stripePaymentLink)}` : ""}\n\nThank you for your business!\n\nBest regards,\n${fromName}`
+    );
+
     window.open(`mailto:${toEmail}?subject=${subject}&body=${body}`, "_blank");
   };
 
@@ -262,14 +341,44 @@ export default function CreateInvoice() {
     const reminder = `Hi ${toName},
 
 This is a friendly reminder that invoice ${invoiceNumber} for ${formatCurrency(total)} is due on ${new Date(dueDate).toLocaleDateString()}.
-
+${stripePaymentLink ? `\nPay online: ${formatStripePaymentLink(stripePaymentLink)}` : ""}
 If you've already sent the payment, please disregard this message. Otherwise, please let me know if you have any questions.
 
 Thank you!
 ${fromName}`;
-    
+
     navigator.clipboard.writeText(reminder);
     alert("Payment reminder copied to clipboard!");
+  };
+
+  const shareWhatsApp = () => {
+    if (!toPhone) {
+      const phone = prompt("Enter client phone number (with country code):");
+      if (!phone) return;
+      setToPhone(phone);
+    }
+    const link = generateWhatsAppLink(
+      toPhone,
+      invoiceNumber,
+      formatCurrency(total),
+      new Date(dueDate).toLocaleDateString()
+    );
+    window.open(link, "_blank");
+  };
+
+  const shareSMS = () => {
+    if (!toPhone) {
+      const phone = prompt("Enter client phone number:");
+      if (!phone) return;
+      setToPhone(phone);
+    }
+    const link = generateSMSLink(
+      toPhone,
+      invoiceNumber,
+      formatCurrency(total),
+      new Date(dueDate).toLocaleDateString()
+    );
+    window.open(link, "_blank");
   };
 
   if (previewHtml) {
@@ -283,18 +392,30 @@ ${fromName}`;
             >
               ← Back to Editor
             </button>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 flex-wrap">
               <button
                 onClick={copyPaymentReminder}
-                className="text-slate-600 hover:text-slate-900 px-4 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 transition text-sm"
+                className="text-slate-600 hover:text-slate-900 px-3 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 transition text-sm"
               >
                 📋 Copy Reminder
+              </button>
+              <button
+                onClick={shareWhatsApp}
+                className="text-green-600 hover:text-green-700 px-3 py-2 rounded-lg border border-green-200 hover:bg-green-50 transition text-sm"
+              >
+                💬 WhatsApp
+              </button>
+              <button
+                onClick={shareSMS}
+                className="text-blue-600 hover:text-blue-700 px-3 py-2 rounded-lg border border-blue-200 hover:bg-blue-50 transition text-sm"
+              >
+                📱 SMS
               </button>
               <button
                 onClick={emailInvoice}
                 className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition flex items-center gap-2 text-sm"
               >
-                ✉️ Email Invoice
+                ✉️ Email
               </button>
               <button
                 onClick={downloadPdf}
@@ -331,10 +452,22 @@ ${fromName}`;
               History
             </Link>
             <Link
+              href="/time"
+              className="text-slate-600 hover:text-slate-900"
+            >
+              Time
+            </Link>
+            <Link
               href="/clients"
               className="text-slate-600 hover:text-slate-900"
             >
               Clients
+            </Link>
+            <Link
+              href="/settings"
+              className="text-slate-600 hover:text-slate-900"
+            >
+              Settings
             </Link>
             <button
               onClick={generateInvoice}
@@ -353,6 +486,92 @@ ${fromName}`;
       </header>
 
       <main className="max-w-4xl mx-auto px-6 py-8">
+        {/* Time Entries Banner */}
+        {unbilledTime.length > 0 && (
+          <div className="bg-amber-50 border border-amber-100 rounded-xl p-4 mb-6 flex items-center justify-between">
+            <div>
+              <div className="font-medium text-amber-900">
+                {unbilledTime.length} unbilled time{" "}
+                {unbilledTime.length === 1 ? "entry" : "entries"}
+              </div>
+              <div className="text-sm text-amber-700">
+                Worth $
+                {unbilledTime
+                  .reduce(
+                    (sum, e) => sum + (e.durationMinutes / 60) * e.hourlyRate,
+                    0
+                  )
+                  .toFixed(2)}
+              </div>
+            </div>
+            <button
+              onClick={() => setShowTimeEntries(true)}
+              className="bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 transition text-sm"
+            >
+              Add to Invoice →
+            </button>
+          </div>
+        )}
+
+        {/* Time Entries Modal */}
+        {showTimeEntries && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl max-w-lg w-full max-h-[80vh] overflow-hidden">
+              <div className="p-4 border-b border-slate-200 flex items-center justify-between">
+                <h3 className="font-semibold text-slate-900">
+                  Add Time Entries
+                </h3>
+                <button
+                  onClick={() => setShowTimeEntries(false)}
+                  className="text-slate-400 hover:text-slate-600"
+                >
+                  ×
+                </button>
+              </div>
+              <div className="p-4 overflow-y-auto max-h-96">
+                {unbilledTime.map((entry) => (
+                  <label
+                    key={entry.id}
+                    className="flex items-center gap-3 p-3 hover:bg-slate-50 rounded-lg cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={selectedTimeEntries.includes(entry.id)}
+                      onChange={() => toggleTimeEntry(entry.id)}
+                      className="rounded border-slate-300"
+                    />
+                    <div className="flex-1">
+                      <div className="font-medium text-slate-900">
+                        {entry.description}
+                      </div>
+                      <div className="text-sm text-slate-500">
+                        {entry.clientName} •{" "}
+                        {formatDuration(entry.durationMinutes)} • $
+                        {((entry.durationMinutes / 60) * entry.hourlyRate).toFixed(2)}
+                      </div>
+                    </div>
+                  </label>
+                ))}
+              </div>
+              <div className="p-4 border-t border-slate-200 flex justify-end gap-3">
+                <button
+                  onClick={() => setShowTimeEntries(false)}
+                  className="px-4 py-2 text-slate-600 hover:text-slate-900"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={addTimeEntriesToInvoice}
+                  disabled={selectedTimeEntries.length === 0}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+                >
+                  Add {selectedTimeEntries.length} Entries
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="grid md:grid-cols-2 gap-8">
           {/* From */}
           <div className="bg-white p-6 rounded-xl border border-slate-200">
@@ -469,17 +688,31 @@ ${fromName}`;
                   className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
                 />
               </div>
-              <div>
-                <label className="block text-sm text-slate-600 mb-1">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  value={toEmail}
-                  onChange={(e) => setToEmail(e.target.value)}
-                  placeholder="accounts@client.com"
-                  className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm text-slate-600 mb-1">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    value={toEmail}
+                    onChange={(e) => setToEmail(e.target.value)}
+                    placeholder="accounts@client.com"
+                    className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm text-slate-600 mb-1">
+                    Phone
+                  </label>
+                  <input
+                    type="tel"
+                    value={toPhone}
+                    onChange={(e) => setToPhone(e.target.value)}
+                    placeholder="+1 555 123 4567"
+                    className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                  />
+                </div>
               </div>
               <div>
                 <label className="block text-sm text-slate-600 mb-1">
@@ -540,7 +773,9 @@ ${fromName}`;
           {/* Payment Terms Row */}
           <div className="flex flex-wrap items-center gap-4 mb-6 p-4 bg-slate-50 rounded-lg">
             <div>
-              <label className="text-sm text-slate-600 mr-2">Payment Terms</label>
+              <label className="text-sm text-slate-600 mr-2">
+                Payment Terms
+              </label>
               <select
                 value={paymentTerms}
                 onChange={(e) => setPaymentTerms(e.target.value)}
@@ -576,7 +811,9 @@ ${fromName}`;
                   <input
                     type="number"
                     value={lateFeePercent}
-                    onChange={(e) => setLateFeePercent(parseFloat(e.target.value) || 0)}
+                    onChange={(e) =>
+                      setLateFeePercent(parseFloat(e.target.value) || 0)
+                    }
                     min="0"
                     max="10"
                     step="0.5"
@@ -586,6 +823,30 @@ ${fromName}`;
                 </div>
               )}
             </div>
+          </div>
+
+          {/* V2: Stripe Payment Link */}
+          <div className="mb-6 p-4 bg-purple-50 rounded-lg border border-purple-100">
+            <label className="block text-sm font-medium text-purple-900 mb-2">
+              💳 Stripe Payment Link (optional)
+            </label>
+            <input
+              type="url"
+              value={stripePaymentLink}
+              onChange={(e) => setStripePaymentLink(e.target.value)}
+              placeholder="https://buy.stripe.com/... or paste your payment link"
+              className="w-full px-3 py-2 rounded border border-purple-200 focus:border-purple-500 outline-none text-sm"
+            />
+            <p className="text-xs text-purple-700 mt-1">
+              Add a Stripe payment link so clients can pay online instantly.{" "}
+              <a
+                href="https://dashboard.stripe.com/payment-links"
+                target="_blank"
+                className="underline"
+              >
+                Create one in Stripe →
+              </a>
+            </p>
           </div>
 
           {/* Line Items */}
@@ -724,9 +985,11 @@ ${fromName}`;
             className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none resize-none"
           />
           <p className="mt-2 text-xs text-slate-500">
-            Payment terms ({paymentTerms.replace("_", " ")}) 
+            Payment terms ({paymentTerms.replace("_", " ")})
             {includeLateFee && ` and ${lateFeePercent}% late fee clause`}
-            {includeContractTerms && " and contract terms"} will be automatically included.
+            {includeContractTerms && " and contract terms"}
+            {stripePaymentLink && " and payment link"} will be automatically
+            included.
           </p>
         </div>
 

@@ -8,12 +8,21 @@ export default function Home() {
         <div className="text-2xl font-bold text-slate-900">
           Invoice<span className="text-blue-600">Flow</span>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-6">
           <Link href="/create" className="text-slate-600 hover:text-slate-900">
-            Create Invoice
+            Create
           </Link>
           <Link href="/history" className="text-slate-600 hover:text-slate-900">
             History
+          </Link>
+          <Link href="/time" className="text-slate-600 hover:text-slate-900">
+            Time Tracking
+          </Link>
+          <Link href="/recurring" className="text-slate-600 hover:text-slate-900">
+            Recurring
+          </Link>
+          <Link href="/analytics" className="text-slate-600 hover:text-slate-900">
+            Analytics
           </Link>
           <a
             href="https://rapidapi.com/astra-ventures/api/invoice-generator"
@@ -68,26 +77,61 @@ export default function Home() {
           </div>
           <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
             <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center text-2xl">
-              💎
+              💳
             </div>
             <h3 className="mt-4 text-xl font-semibold text-slate-900">
-              Professional Design
+              Stripe Payments
             </h3>
             <p className="mt-2 text-slate-600">
-              Clean, modern templates that make you look professional. Impress
-              your clients.
+              Add payment links to invoices. Get paid instantly with Stripe — no chasing clients.
             </p>
           </div>
           <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
             <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center text-2xl">
-              🔌
+              ⏱️
             </div>
             <h3 className="mt-4 text-xl font-semibold text-slate-900">
-              API for Developers
+              Time Tracking
             </h3>
             <p className="mt-2 text-slate-600">
-              Generate invoices programmatically. Perfect for SaaS, marketplaces,
-              and automation.
+              Track your hours, convert to invoices instantly. Never miss billable time.
+            </p>
+          </div>
+        </div>
+
+        {/* V2 Features */}
+        <div className="mt-16 grid md:grid-cols-3 gap-8">
+          <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
+            <div className="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center text-2xl">
+              🔄
+            </div>
+            <h3 className="mt-4 text-xl font-semibold text-slate-900">
+              Recurring Invoices
+            </h3>
+            <p className="mt-2 text-slate-600">
+              Set up retainers and subscriptions. Auto-generate invoices on schedule.
+            </p>
+          </div>
+          <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
+            <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center text-2xl">
+              📊
+            </div>
+            <h3 className="mt-4 text-xl font-semibold text-slate-900">
+              Analytics Dashboard
+            </h3>
+            <p className="mt-2 text-slate-600">
+              Track revenue, payment times, and top clients. Make smarter business decisions.
+            </p>
+          </div>
+          <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
+            <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center text-2xl">
+              💬
+            </div>
+            <h3 className="mt-4 text-xl font-semibold text-slate-900">
+              WhatsApp & SMS
+            </h3>
+            <p className="mt-2 text-slate-600">
+              Send invoices via WhatsApp or SMS. Reach clients where they actually are.
             </p>
           </div>
         </div>
@@ -107,17 +151,23 @@ export default function Home() {
               <h3 className="text-lg font-semibold text-slate-900">Free</h3>
               <div className="mt-4">
                 <span className="text-4xl font-bold text-slate-900">$0</span>
-                <span className="text-slate-500">/month</span>
+                <span className="text-slate-500">/forever</span>
               </div>
               <ul className="mt-6 space-y-3 text-slate-600">
                 <li className="flex items-center gap-2">
-                  <span className="text-green-500">✓</span> 3 invoices/month
+                  <span className="text-green-500">✓</span> Unlimited invoices
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="text-green-500">✓</span> PDF download
+                  <span className="text-green-500">✓</span> Time tracking
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="text-green-500">✓</span> All templates
+                  <span className="text-green-500">✓</span> Analytics dashboard
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-green-500">✓</span> WhatsApp & SMS sharing
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-green-500">✓</span> Late fee calculator
                 </li>
               </ul>
               <Link
@@ -131,7 +181,7 @@ export default function Home() {
             {/* Pro */}
             <div className="bg-blue-600 p-8 rounded-2xl text-white relative">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-400 text-yellow-900 text-xs font-bold px-3 py-1 rounded-full">
-                MOST POPULAR
+                COMING SOON
               </div>
               <h3 className="text-lg font-semibold">Pro</h3>
               <div className="mt-4">
@@ -140,20 +190,23 @@ export default function Home() {
               </div>
               <ul className="mt-6 space-y-3 text-blue-100">
                 <li className="flex items-center gap-2">
-                  <span className="text-white">✓</span> Unlimited invoices
+                  <span className="text-white">✓</span> Everything in Free
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="text-white">✓</span> Client management
+                  <span className="text-white">✓</span> Stripe payment links
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="text-white">✓</span> Invoice tracking
+                  <span className="text-white">✓</span> Recurring invoices
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="text-white">✓</span> Custom branding
                 </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-white">✓</span> Cloud sync
+                </li>
               </ul>
               <button className="mt-8 block w-full text-center py-3 rounded-lg bg-white text-blue-600 font-semibold hover:bg-blue-50 transition">
-                Start Free Trial
+                Join Waitlist
               </button>
             </div>
 

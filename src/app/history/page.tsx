@@ -85,12 +85,19 @@ export default function InvoiceHistory() {
           <Link href="/" className="text-2xl font-bold text-slate-900">
             Invoice<span className="text-blue-600">Flow</span>
           </Link>
-          <div className="flex items-center gap-4">
-            <Link
-              href="/clients"
-              className="text-slate-600 hover:text-slate-900"
-            >
-              Clients
+          <nav className="flex items-center gap-4">
+            <Link href="/create" className="text-slate-600 hover:text-slate-900">
+              Create
+            </Link>
+            <span className="text-blue-600 font-medium">History</span>
+            <Link href="/time" className="text-slate-600 hover:text-slate-900">
+              Time
+            </Link>
+            <Link href="/recurring" className="text-slate-600 hover:text-slate-900">
+              Recurring
+            </Link>
+            <Link href="/analytics" className="text-slate-600 hover:text-slate-900">
+              Analytics
             </Link>
             <Link
               href="/create"
@@ -98,7 +105,7 @@ export default function InvoiceHistory() {
             >
               + New Invoice
             </Link>
-          </div>
+          </nav>
         </div>
       </header>
 
