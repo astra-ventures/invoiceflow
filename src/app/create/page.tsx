@@ -9,7 +9,12 @@ import {
   saveClient,
   getNextInvoiceNumber,
   saveInvoice,
+  getDueDateFromTerms,
+  PAYMENT_TERMS_NOTES,
+  LATE_FEE_CLAUSE,
+  DEFAULT_CONTRACT_TERMS,
   type Client,
+  type BusinessInfo,
 } from "@/lib/storage";
 
 interface LineItem {
@@ -39,6 +44,14 @@ export default function CreateInvoice() {
   const [showClientDropdown, setShowClientDropdown] = useState(false);
   const [saveClientChecked, setSaveClientChecked] = useState(false);
   const [businessInfoSaved, setBusinessInfoSaved] = useState(false);
+  
+  // New features
+  const [paymentTerms, setPaymentTerms] = useState("net_30");
+  const [dueDate, setDueDate] = useState("");
+  const [lateFeePercent, setLateFeePercent] = useState(1.5);
+  const [includeLateFee, setIncludeLateFee] = useState(true);
+  const [includeContractTerms, setIncludeContractTerms] = useState(false);
+  const [savedInvoiceId, setSavedInvoiceId] = useState<string | null>(null);
 
   // Load saved data on mount
   useEffect(() => {
@@ -47,18 +60,34 @@ export default function CreateInvoice() {
       setFromName(savedBusiness.name);
       setFromEmail(savedBusiness.email);
       setFromAddress(savedBusiness.address);
+      if (savedBusiness.paymentTerms) setPaymentTerms(savedBusiness.paymentTerms);
+      if (savedBusiness.lateFeePercent) setLateFeePercent(savedBusiness.lateFeePercent);
+      if (savedBusiness.defaultNotes) setNotes(savedBusiness.defaultNotes);
       setBusinessInfoSaved(true);
     }
     setClients(getClients());
     setInvoiceNumber(getNextInvoiceNumber());
+    
+    // Set initial due date
+    const initialDueDate = getDueDateFromTerms("net_30");
+    setDueDate(initialDueDate.toISOString().split("T")[0]);
   }, []);
 
+  // Update due date when payment terms change
+  useEffect(() => {
+    const newDueDate = getDueDateFromTerms(paymentTerms);
+    setDueDate(newDueDate.toISOString().split("T")[0]);
+  }, [paymentTerms]);
+
   const handleSaveBusinessInfo = () => {
-    saveBusinessInfo({
+    const info: BusinessInfo = {
       name: fromName,
       email: fromEmail,
       address: fromAddress,
-    });
+      paymentTerms,
+      lateFeePercent,
+    };
+    saveBusinessInfo(info);
     setBusinessInfoSaved(true);
   };
 
@@ -111,9 +140,37 @@ export default function CreateInvoice() {
     return `${currencySymbol[currency] || currency + " "}${amount.toFixed(2)}`;
   };
 
+  // Build the notes with payment terms
+  const buildFullNotes = () => {
+    let fullNotes = notes;
+    
+    // Add payment terms
+    const termsNote = PAYMENT_TERMS_NOTES[paymentTerms];
+    if (termsNote && !fullNotes.includes(termsNote)) {
+      fullNotes = termsNote + (fullNotes ? "\n\n" + fullNotes : "");
+    }
+    
+    // Add late fee clause
+    if (includeLateFee && lateFeePercent > 0) {
+      const lateFeeNote = LATE_FEE_CLAUSE(lateFeePercent);
+      if (!fullNotes.includes("late fee")) {
+        fullNotes += "\n\n" + lateFeeNote;
+      }
+    }
+    
+    // Add contract terms
+    if (includeContractTerms) {
+      fullNotes += "\n\n" + DEFAULT_CONTRACT_TERMS;
+    }
+    
+    return fullNotes.trim();
+  };
+
   const generateInvoice = async () => {
     setLoading(true);
     try {
+      const fullNotes = buildFullNotes();
+      
       const response = await fetch(
         "https://astra-invoice-api.onrender.com/preview",
         {
@@ -127,13 +184,14 @@ export default function CreateInvoice() {
             to_name: toName,
             to_email: toEmail,
             to_address: toAddress,
+            due_date: dueDate,
             items: items.map((item) => ({
               description: item.description,
               quantity: item.quantity,
               unit_price: item.unitPrice,
             })),
             tax_rate: taxRate / 100,
-            notes,
+            notes: fullNotes,
             currency,
           }),
         }
@@ -156,13 +214,17 @@ export default function CreateInvoice() {
       }
 
       // Save invoice to history
-      saveInvoice({
+      const invoice = saveInvoice({
         invoiceNumber,
         clientName: toName,
+        clientEmail: toEmail,
         total,
         currency,
+        dueDate,
         status: "draft",
+        html,
       });
+      setSavedInvoiceId(invoice.id);
     } catch (error) {
       alert("Error generating invoice. Please try again.");
       console.error(error);
@@ -173,8 +235,6 @@ export default function CreateInvoice() {
 
   const downloadPdf = () => {
     if (!previewHtml) return;
-
-    // Open in new window for printing
     const printWindow = window.open("", "_blank");
     if (printWindow) {
       printWindow.document.write(previewHtml);
@@ -182,6 +242,34 @@ export default function CreateInvoice() {
       printWindow.focus();
       setTimeout(() => printWindow.print(), 250);
     }
+  };
+
+  const emailInvoice = () => {
+    if (!toEmail) {
+      alert("Please enter the client's email address.");
+      return;
+    }
+    
+    const subject = encodeURIComponent(`Invoice ${invoiceNumber} from ${fromName}`);
+    const body = encodeURIComponent(
+      `Hi ${toName},\n\nPlease find attached invoice ${invoiceNumber} for ${formatCurrency(total)}.\n\nDue Date: ${new Date(dueDate).toLocaleDateString()}\n\nThank you for your business!\n\nBest regards,\n${fromName}`
+    );
+    
+    window.open(`mailto:${toEmail}?subject=${subject}&body=${body}`, "_blank");
+  };
+
+  const copyPaymentReminder = () => {
+    const reminder = `Hi ${toName},
+
+This is a friendly reminder that invoice ${invoiceNumber} for ${formatCurrency(total)} is due on ${new Date(dueDate).toLocaleDateString()}.
+
+If you've already sent the payment, please disregard this message. Otherwise, please let me know if you have any questions.
+
+Thank you!
+${fromName}`;
+    
+    navigator.clipboard.writeText(reminder);
+    alert("Payment reminder copied to clipboard!");
   };
 
   if (previewHtml) {
@@ -195,12 +283,24 @@ export default function CreateInvoice() {
             >
               ← Back to Editor
             </button>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={copyPaymentReminder}
+                className="text-slate-600 hover:text-slate-900 px-4 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 transition text-sm"
+              >
+                📋 Copy Reminder
+              </button>
+              <button
+                onClick={emailInvoice}
+                className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition flex items-center gap-2 text-sm"
+              >
+                ✉️ Email Invoice
+              </button>
               <button
                 onClick={downloadPdf}
-                className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition flex items-center gap-2"
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition flex items-center gap-2 text-sm"
               >
-                🖨️ Print / Save as PDF
+                🖨️ Print / PDF
               </button>
             </div>
           </div>
@@ -229,6 +329,12 @@ export default function CreateInvoice() {
               className="text-slate-600 hover:text-slate-900"
             >
               History
+            </Link>
+            <Link
+              href="/clients"
+              className="text-slate-600 hover:text-slate-900"
+            >
+              Clients
             </Link>
             <button
               onClick={generateInvoice}
@@ -402,16 +508,16 @@ export default function CreateInvoice() {
 
         {/* Invoice Details */}
         <div className="mt-8 bg-white p-6 rounded-xl border border-slate-200">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
             <h2 className="font-semibold text-slate-900">Invoice Details</h2>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center gap-4">
               <div>
                 <label className="text-sm text-slate-600 mr-2">Invoice #</label>
                 <input
                   type="text"
                   value={invoiceNumber}
                   onChange={(e) => setInvoiceNumber(e.target.value)}
-                  className="px-3 py-1 rounded border border-slate-200 w-40"
+                  className="px-3 py-1 rounded border border-slate-200 w-36"
                 />
               </div>
               <div>
@@ -431,8 +537,59 @@ export default function CreateInvoice() {
             </div>
           </div>
 
+          {/* Payment Terms Row */}
+          <div className="flex flex-wrap items-center gap-4 mb-6 p-4 bg-slate-50 rounded-lg">
+            <div>
+              <label className="text-sm text-slate-600 mr-2">Payment Terms</label>
+              <select
+                value={paymentTerms}
+                onChange={(e) => setPaymentTerms(e.target.value)}
+                className="px-3 py-1 rounded border border-slate-200"
+              >
+                <option value="due_on_receipt">Due on Receipt</option>
+                <option value="net_15">Net 15</option>
+                <option value="net_30">Net 30</option>
+                <option value="net_60">Net 60</option>
+              </select>
+            </div>
+            <div>
+              <label className="text-sm text-slate-600 mr-2">Due Date</label>
+              <input
+                type="date"
+                value={dueDate}
+                onChange={(e) => setDueDate(e.target.value)}
+                className="px-3 py-1 rounded border border-slate-200"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="flex items-center gap-2 text-sm text-slate-600">
+                <input
+                  type="checkbox"
+                  checked={includeLateFee}
+                  onChange={(e) => setIncludeLateFee(e.target.checked)}
+                  className="rounded border-slate-300"
+                />
+                Late fee
+              </label>
+              {includeLateFee && (
+                <div className="flex items-center gap-1">
+                  <input
+                    type="number"
+                    value={lateFeePercent}
+                    onChange={(e) => setLateFeePercent(parseFloat(e.target.value) || 0)}
+                    min="0"
+                    max="10"
+                    step="0.5"
+                    className="w-16 px-2 py-1 rounded border border-slate-200 text-sm"
+                  />
+                  <span className="text-sm text-slate-500">%/mo</span>
+                </div>
+              )}
+            </div>
+          </div>
+
           {/* Line Items */}
-          <div className="mt-6">
+          <div className="mt-4">
             <div className="grid grid-cols-12 gap-4 text-sm text-slate-600 mb-2">
               <div className="col-span-6">Description</div>
               <div className="col-span-2 text-right">Qty</div>
@@ -547,14 +704,30 @@ export default function CreateInvoice() {
 
         {/* Notes */}
         <div className="mt-8 bg-white p-6 rounded-xl border border-slate-200">
-          <h2 className="font-semibold text-slate-900 mb-4">Notes</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-semibold text-slate-900">Notes & Terms</h2>
+            <label className="flex items-center gap-2 text-sm text-slate-600">
+              <input
+                type="checkbox"
+                checked={includeContractTerms}
+                onChange={(e) => setIncludeContractTerms(e.target.checked)}
+                className="rounded border-slate-300"
+              />
+              Include contract terms
+            </label>
+          </div>
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            placeholder="Payment due within 30 days. Bank details: ..."
+            placeholder="Additional notes (payment terms and late fee clause will be auto-added)..."
             rows={3}
             className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none resize-none"
           />
+          <p className="mt-2 text-xs text-slate-500">
+            Payment terms ({paymentTerms.replace("_", " ")}) 
+            {includeLateFee && ` and ${lateFeePercent}% late fee clause`}
+            {includeContractTerms && " and contract terms"} will be automatically included.
+          </p>
         </div>
 
         {/* Generate Button */}

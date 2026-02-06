@@ -7,6 +7,9 @@ export interface BusinessInfo {
   email: string;
   address: string;
   phone?: string;
+  paymentTerms?: string; // "due_on_receipt" | "net_15" | "net_30" | "net_60"
+  lateFeePercent?: number;
+  defaultNotes?: string;
 }
 
 export interface Client {
@@ -21,10 +24,13 @@ export interface InvoiceRecord {
   id: string;
   invoiceNumber: string;
   clientName: string;
+  clientEmail?: string;
   total: number;
   currency: string;
   createdAt: string;
-  status: "draft" | "sent" | "paid";
+  dueDate?: string;
+  status: "draft" | "sent" | "viewed" | "paid" | "overdue";
+  html?: string; // Store the generated HTML for resending
 }
 
 const KEYS = {
@@ -96,11 +102,41 @@ export function getInvoices(): InvoiceRecord[] {
   return data ? JSON.parse(data) : [];
 }
 
-export function updateInvoiceStatus(id: string, status: InvoiceRecord["status"]): void {
+export function getInvoice(id: string): InvoiceRecord | undefined {
+  return getInvoices().find((inv) => inv.id === id);
+}
+
+export function updateInvoice(id: string, updates: Partial<InvoiceRecord>): void {
   const invoices = getInvoices().map((inv) =>
-    inv.id === id ? { ...inv, status } : inv
+    inv.id === id ? { ...inv, ...updates } : inv
   );
   localStorage.setItem(KEYS.INVOICES, JSON.stringify(invoices));
+}
+
+export function updateInvoiceStatus(id: string, status: InvoiceRecord["status"]): void {
+  updateInvoice(id, { status });
+}
+
+// Check and update overdue invoices
+export function checkOverdueInvoices(): void {
+  const invoices = getInvoices();
+  const now = new Date();
+  let hasChanges = false;
+  
+  const updated = invoices.map((inv) => {
+    if (inv.dueDate && inv.status !== "paid" && inv.status !== "overdue") {
+      const dueDate = new Date(inv.dueDate);
+      if (now > dueDate) {
+        hasChanges = true;
+        return { ...inv, status: "overdue" as const };
+      }
+    }
+    return inv;
+  });
+  
+  if (hasChanges) {
+    localStorage.setItem(KEYS.INVOICES, JSON.stringify(updated));
+  }
 }
 
 // Invoice Number Generation
@@ -124,3 +160,68 @@ export function getNextInvoiceNumber(): string {
   localStorage.setItem(KEYS.LAST_INVOICE_NUMBER, invoiceNumber);
   return invoiceNumber;
 }
+
+// Payment Terms Helpers
+export function getPaymentTermsLabel(terms: string): string {
+  const labels: Record<string, string> = {
+    due_on_receipt: "Due on Receipt",
+    net_15: "Net 15 (Due in 15 days)",
+    net_30: "Net 30 (Due in 30 days)",
+    net_60: "Net 60 (Due in 60 days)",
+  };
+  return labels[terms] || terms;
+}
+
+export function getDueDateFromTerms(terms: string, issueDate: Date = new Date()): Date {
+  const daysMap: Record<string, number> = {
+    due_on_receipt: 0,
+    net_15: 15,
+    net_30: 30,
+    net_60: 60,
+  };
+  const days = daysMap[terms] || 0;
+  const dueDate = new Date(issueDate);
+  dueDate.setDate(dueDate.getDate() + days);
+  return dueDate;
+}
+
+// Late Fee Calculator
+export function calculateLateFee(
+  total: number,
+  dueDate: Date,
+  lateFeePercent: number = 1.5, // Default 1.5% per month
+  asOfDate: Date = new Date()
+): { daysLate: number; fee: number; newTotal: number } {
+  if (asOfDate <= dueDate) {
+    return { daysLate: 0, fee: 0, newTotal: total };
+  }
+  
+  const msPerDay = 24 * 60 * 60 * 1000;
+  const daysLate = Math.floor((asOfDate.getTime() - dueDate.getTime()) / msPerDay);
+  const monthsLate = Math.max(1, Math.ceil(daysLate / 30)); // At least 1 month
+  const fee = total * (lateFeePercent / 100) * monthsLate;
+  
+  return {
+    daysLate,
+    fee: Math.round(fee * 100) / 100,
+    newTotal: Math.round((total + fee) * 100) / 100,
+  };
+}
+
+// Payment terms presets for notes
+export const PAYMENT_TERMS_NOTES: Record<string, string> = {
+  due_on_receipt: "Payment is due upon receipt of this invoice.",
+  net_15: "Payment is due within 15 days of the invoice date.",
+  net_30: "Payment is due within 30 days of the invoice date.",
+  net_60: "Payment is due within 60 days of the invoice date.",
+};
+
+export const LATE_FEE_CLAUSE = (percent: number) =>
+  `A late fee of ${percent}% per month will be applied to overdue invoices.`;
+
+export const DEFAULT_CONTRACT_TERMS = `
+TERMS AND CONDITIONS:
+1. Payment is due as specified above. Late payments may incur additional fees.
+2. All work remains the property of the service provider until full payment is received.
+3. By paying this invoice, the client agrees to these terms.
+`.trim();
