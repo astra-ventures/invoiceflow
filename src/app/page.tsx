@@ -12,6 +12,9 @@ export default function Home() {
           <Link href="/create" className="text-slate-600 hover:text-slate-900">
             Create Invoice
           </Link>
+          <Link href="/history" className="text-slate-600 hover:text-slate-900">
+            History
+          </Link>
           <a
             href="https://rapidapi.com/astra-ventures/api/invoice-generator"
             target="_blank"

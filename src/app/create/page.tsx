@@ -1,7 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import {
+  getBusinessInfo,
+  saveBusinessInfo,
+  getClients,
+  saveClient,
+  getNextInvoiceNumber,
+  saveInvoice,
+  type Client,
+} from "@/lib/storage";
 
 interface LineItem {
   id: string;
@@ -11,9 +20,7 @@ interface LineItem {
 }
 
 export default function CreateInvoice() {
-  const [invoiceNumber, setInvoiceNumber] = useState(
-    `INV-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 1000)).padStart(3, "0")}`
-  );
+  const [invoiceNumber, setInvoiceNumber] = useState("");
   const [fromName, setFromName] = useState("");
   const [fromEmail, setFromEmail] = useState("");
   const [fromAddress, setFromAddress] = useState("");
@@ -28,6 +35,39 @@ export default function CreateInvoice() {
   const [currency, setCurrency] = useState("USD");
   const [loading, setLoading] = useState(false);
   const [previewHtml, setPreviewHtml] = useState<string | null>(null);
+  const [clients, setClients] = useState<Client[]>([]);
+  const [showClientDropdown, setShowClientDropdown] = useState(false);
+  const [saveClientChecked, setSaveClientChecked] = useState(false);
+  const [businessInfoSaved, setBusinessInfoSaved] = useState(false);
+
+  // Load saved data on mount
+  useEffect(() => {
+    const savedBusiness = getBusinessInfo();
+    if (savedBusiness) {
+      setFromName(savedBusiness.name);
+      setFromEmail(savedBusiness.email);
+      setFromAddress(savedBusiness.address);
+      setBusinessInfoSaved(true);
+    }
+    setClients(getClients());
+    setInvoiceNumber(getNextInvoiceNumber());
+  }, []);
+
+  const handleSaveBusinessInfo = () => {
+    saveBusinessInfo({
+      name: fromName,
+      email: fromEmail,
+      address: fromAddress,
+    });
+    setBusinessInfoSaved(true);
+  };
+
+  const handleSelectClient = (client: Client) => {
+    setToName(client.name);
+    setToEmail(client.email);
+    setToAddress(client.address);
+    setShowClientDropdown(false);
+  };
 
   const addItem = () => {
     setItems([
@@ -42,11 +82,13 @@ export default function CreateInvoice() {
     }
   };
 
-  const updateItem = (id: string, field: keyof LineItem, value: string | number) => {
+  const updateItem = (
+    id: string,
+    field: keyof LineItem,
+    value: string | number
+  ) => {
     setItems(
-      items.map((item) =>
-        item.id === id ? { ...item, [field]: value } : item
-      )
+      items.map((item) => (item.id === id ? { ...item, [field]: value } : item))
     );
   };
 
@@ -72,32 +114,55 @@ export default function CreateInvoice() {
   const generateInvoice = async () => {
     setLoading(true);
     try {
-      const response = await fetch("https://astra-invoice-api.onrender.com/preview", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          invoice_number: invoiceNumber,
-          from_name: fromName,
-          from_email: fromEmail,
-          from_address: fromAddress,
-          to_name: toName,
-          to_email: toEmail,
-          to_address: toAddress,
-          items: items.map((item) => ({
-            description: item.description,
-            quantity: item.quantity,
-            unit_price: item.unitPrice,
-          })),
-          tax_rate: taxRate / 100,
-          notes,
-          currency,
-        }),
-      });
+      const response = await fetch(
+        "https://astra-invoice-api.onrender.com/preview",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            invoice_number: invoiceNumber,
+            from_name: fromName,
+            from_email: fromEmail,
+            from_address: fromAddress,
+            to_name: toName,
+            to_email: toEmail,
+            to_address: toAddress,
+            items: items.map((item) => ({
+              description: item.description,
+              quantity: item.quantity,
+              unit_price: item.unitPrice,
+            })),
+            tax_rate: taxRate / 100,
+            notes,
+            currency,
+          }),
+        }
+      );
 
       if (!response.ok) throw new Error("Failed to generate invoice");
-      
+
       const html = await response.text();
       setPreviewHtml(html);
+
+      // Save client if checkbox is checked
+      if (saveClientChecked && toName) {
+        const newClient = saveClient({
+          name: toName,
+          email: toEmail,
+          address: toAddress,
+        });
+        setClients([...clients, newClient]);
+        setSaveClientChecked(false);
+      }
+
+      // Save invoice to history
+      saveInvoice({
+        invoiceNumber,
+        clientName: toName,
+        total,
+        currency,
+        status: "draft",
+      });
     } catch (error) {
       alert("Error generating invoice. Please try again.");
       console.error(error);
@@ -108,7 +173,7 @@ export default function CreateInvoice() {
 
   const downloadPdf = () => {
     if (!previewHtml) return;
-    
+
     // Open in new window for printing
     const printWindow = window.open("", "_blank");
     if (printWindow) {
@@ -158,13 +223,26 @@ export default function CreateInvoice() {
           <Link href="/" className="text-2xl font-bold text-slate-900">
             Invoice<span className="text-blue-600">Flow</span>
           </Link>
-          <button
-            onClick={generateInvoice}
-            disabled={loading || !fromName || !toName || items.every(i => !i.description)}
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {loading ? "Generating..." : "Preview Invoice →"}
-          </button>
+          <div className="flex items-center gap-4">
+            <Link
+              href="/history"
+              className="text-slate-600 hover:text-slate-900"
+            >
+              History
+            </Link>
+            <button
+              onClick={generateInvoice}
+              disabled={
+                loading ||
+                !fromName ||
+                !toName ||
+                items.every((i) => !i.description)
+              }
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? "Generating..." : "Preview Invoice →"}
+            </button>
+          </div>
         </div>
       </header>
 
@@ -172,33 +250,63 @@ export default function CreateInvoice() {
         <div className="grid md:grid-cols-2 gap-8">
           {/* From */}
           <div className="bg-white p-6 rounded-xl border border-slate-200">
-            <h2 className="font-semibold text-slate-900 mb-4">From (Your Details)</h2>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-semibold text-slate-900">
+                From (Your Details)
+              </h2>
+              {fromName && !businessInfoSaved && (
+                <button
+                  onClick={handleSaveBusinessInfo}
+                  className="text-sm text-blue-600 hover:text-blue-700"
+                >
+                  Save for next time
+                </button>
+              )}
+              {businessInfoSaved && (
+                <span className="text-sm text-green-600">✓ Saved</span>
+              )}
+            </div>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm text-slate-600 mb-1">Business Name *</label>
+                <label className="block text-sm text-slate-600 mb-1">
+                  Business Name *
+                </label>
                 <input
                   type="text"
                   value={fromName}
-                  onChange={(e) => setFromName(e.target.value)}
+                  onChange={(e) => {
+                    setFromName(e.target.value);
+                    setBusinessInfoSaved(false);
+                  }}
                   placeholder="Acme Corp"
                   className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
                 />
               </div>
               <div>
-                <label className="block text-sm text-slate-600 mb-1">Email</label>
+                <label className="block text-sm text-slate-600 mb-1">
+                  Email
+                </label>
                 <input
                   type="email"
                   value={fromEmail}
-                  onChange={(e) => setFromEmail(e.target.value)}
+                  onChange={(e) => {
+                    setFromEmail(e.target.value);
+                    setBusinessInfoSaved(false);
+                  }}
                   placeholder="billing@acme.com"
                   className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
                 />
               </div>
               <div>
-                <label className="block text-sm text-slate-600 mb-1">Address</label>
+                <label className="block text-sm text-slate-600 mb-1">
+                  Address
+                </label>
                 <textarea
                   value={fromAddress}
-                  onChange={(e) => setFromAddress(e.target.value)}
+                  onChange={(e) => {
+                    setFromAddress(e.target.value);
+                    setBusinessInfoSaved(false);
+                  }}
                   placeholder="123 Business St&#10;New York, NY 10001"
                   rows={2}
                   className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none resize-none"
@@ -209,10 +317,44 @@ export default function CreateInvoice() {
 
           {/* To */}
           <div className="bg-white p-6 rounded-xl border border-slate-200">
-            <h2 className="font-semibold text-slate-900 mb-4">To (Client Details)</h2>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-semibold text-slate-900">
+                To (Client Details)
+              </h2>
+              {clients.length > 0 && (
+                <div className="relative">
+                  <button
+                    onClick={() => setShowClientDropdown(!showClientDropdown)}
+                    className="text-sm text-blue-600 hover:text-blue-700"
+                  >
+                    Select saved client ▾
+                  </button>
+                  {showClientDropdown && (
+                    <div className="absolute right-0 top-8 bg-white border border-slate-200 rounded-lg shadow-lg py-2 min-w-48 z-10">
+                      {clients.map((client) => (
+                        <button
+                          key={client.id}
+                          onClick={() => handleSelectClient(client)}
+                          className="block w-full text-left px-4 py-2 hover:bg-slate-50 text-sm"
+                        >
+                          <div className="font-medium text-slate-900">
+                            {client.name}
+                          </div>
+                          <div className="text-slate-500 text-xs">
+                            {client.email}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm text-slate-600 mb-1">Client Name *</label>
+                <label className="block text-sm text-slate-600 mb-1">
+                  Client Name *
+                </label>
                 <input
                   type="text"
                   value={toName}
@@ -222,7 +364,9 @@ export default function CreateInvoice() {
                 />
               </div>
               <div>
-                <label className="block text-sm text-slate-600 mb-1">Email</label>
+                <label className="block text-sm text-slate-600 mb-1">
+                  Email
+                </label>
                 <input
                   type="email"
                   value={toEmail}
@@ -232,7 +376,9 @@ export default function CreateInvoice() {
                 />
               </div>
               <div>
-                <label className="block text-sm text-slate-600 mb-1">Address</label>
+                <label className="block text-sm text-slate-600 mb-1">
+                  Address
+                </label>
                 <textarea
                   value={toAddress}
                   onChange={(e) => setToAddress(e.target.value)}
@@ -241,6 +387,15 @@ export default function CreateInvoice() {
                   className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none resize-none"
                 />
               </div>
+              <label className="flex items-center gap-2 text-sm text-slate-600">
+                <input
+                  type="checkbox"
+                  checked={saveClientChecked}
+                  onChange={(e) => setSaveClientChecked(e.target.checked)}
+                  className="rounded border-slate-300"
+                />
+                Save client for future invoices
+              </label>
             </div>
           </div>
         </div>
@@ -284,14 +439,19 @@ export default function CreateInvoice() {
               <div className="col-span-2 text-right">Unit Price</div>
               <div className="col-span-2 text-right">Amount</div>
             </div>
-            
+
             {items.map((item) => (
-              <div key={item.id} className="grid grid-cols-12 gap-4 mb-3 items-center">
+              <div
+                key={item.id}
+                className="grid grid-cols-12 gap-4 mb-3 items-center"
+              >
                 <div className="col-span-6">
                   <input
                     type="text"
                     value={item.description}
-                    onChange={(e) => updateItem(item.id, "description", e.target.value)}
+                    onChange={(e) =>
+                      updateItem(item.id, "description", e.target.value)
+                    }
                     placeholder="Web Development"
                     className="w-full px-3 py-2 rounded border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
                   />
@@ -300,7 +460,13 @@ export default function CreateInvoice() {
                   <input
                     type="number"
                     value={item.quantity}
-                    onChange={(e) => updateItem(item.id, "quantity", parseFloat(e.target.value) || 0)}
+                    onChange={(e) =>
+                      updateItem(
+                        item.id,
+                        "quantity",
+                        parseFloat(e.target.value) || 0
+                      )
+                    }
                     min="0"
                     step="0.5"
                     className="w-full px-3 py-2 rounded border border-slate-200 text-right focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
@@ -310,7 +476,13 @@ export default function CreateInvoice() {
                   <input
                     type="number"
                     value={item.unitPrice}
-                    onChange={(e) => updateItem(item.id, "unitPrice", parseFloat(e.target.value) || 0)}
+                    onChange={(e) =>
+                      updateItem(
+                        item.id,
+                        "unitPrice",
+                        parseFloat(e.target.value) || 0
+                      )
+                    }
                     min="0"
                     step="0.01"
                     className="w-full px-3 py-2 rounded border border-slate-200 text-right focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
@@ -353,7 +525,9 @@ export default function CreateInvoice() {
                   <input
                     type="number"
                     value={taxRate}
-                    onChange={(e) => setTaxRate(parseFloat(e.target.value) || 0)}
+                    onChange={(e) =>
+                      setTaxRate(parseFloat(e.target.value) || 0)
+                    }
                     min="0"
                     max="100"
                     step="0.5"
@@ -387,7 +561,12 @@ export default function CreateInvoice() {
         <div className="mt-8 flex justify-center">
           <button
             onClick={generateInvoice}
-            disabled={loading || !fromName || !toName || items.every(i => !i.description)}
+            disabled={
+              loading ||
+              !fromName ||
+              !toName ||
+              items.every((i) => !i.description)
+            }
             className="bg-blue-600 text-white px-12 py-4 rounded-xl text-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-600/25"
           >
             {loading ? "Generating..." : "Generate Invoice →"}
