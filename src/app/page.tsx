@@ -38,12 +38,13 @@ export default function Home() {
       <main className="max-w-6xl mx-auto px-6 pt-20 pb-32">
         <div className="text-center max-w-3xl mx-auto">
           <h1 className="text-5xl md:text-6xl font-bold text-slate-900 leading-tight">
-            Create professional invoices in{" "}
-            <span className="text-blue-600">60 seconds</span>
+            Free Invoice Generator:{" "}
+            <span className="text-blue-600">Professional Invoices in 60 Seconds</span>
           </h1>
           <p className="mt-6 text-xl text-slate-600">
-            No signup required. No bloated software. Just fast, beautiful
-            invoices that help you get paid.
+            The best free invoice generator for freelancers and small businesses. 
+            Create professional invoices online with no signup required. 
+            Fast, beautiful, and completely free forever.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
             <Link
@@ -253,6 +254,86 @@ export default function Home() {
           >
             Create Your First Invoice →
           </Link>
+        </div>
+
+        {/* FAQ Section for SEO */}
+        <div className="mt-32">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-slate-900">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-xl text-slate-600 mt-4">
+              Everything you need to know about our free invoice generator
+            </p>
+          </div>
+
+          <div className="max-w-4xl mx-auto space-y-8">
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+              <h3 className="text-lg font-semibold text-slate-900 mb-3">
+                Is InvoiceFlow really a free invoice generator?
+              </h3>
+              <p className="text-slate-600">
+                Yes! InvoiceFlow is completely free forever. Create unlimited professional invoices, 
+                track your time, and access analytics with no hidden fees or signup requirements. 
+                Our free invoice generator helps freelancers and small businesses get paid faster.
+              </p>
+            </div>
+
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+              <h3 className="text-lg font-semibold text-slate-900 mb-3">
+                Do I need to sign up to create invoices?
+              </h3>
+              <p className="text-slate-600">
+                No signup required! Our invoice generator works immediately without creating an account. 
+                Just visit our invoice maker, fill in your details, and download your professional invoice in PDF format. 
+                It's the fastest way to create invoices online.
+              </p>
+            </div>
+
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+              <h3 className="text-lg font-semibold text-slate-900 mb-3">
+                What makes this the best free invoice generator?
+              </h3>
+              <p className="text-slate-600">
+                InvoiceFlow combines speed, professional design, and powerful features. Unlike other invoice software, 
+                we focus on getting you from idea to invoice in 60 seconds. Plus, you get time tracking, 
+                recurring invoices, and payment links - all free forever.
+              </p>
+            </div>
+
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+              <h3 className="text-lg font-semibold text-slate-900 mb-3">
+                Can I add payment links to my invoices?
+              </h3>
+              <p className="text-slate-600">
+                Yes! Our invoice generator includes Stripe payment integration. Add secure payment buttons 
+                to your invoices so clients can pay instantly with credit cards, bank transfers, or digital wallets. 
+                Get paid faster with one-click payments.
+              </p>
+            </div>
+
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+              <h3 className="text-lg font-semibold text-slate-900 mb-3">
+                What file formats are supported?
+              </h3>
+              <p className="text-slate-600">
+                Our free invoice generator creates professional PDF invoices that look great on any device. 
+                You can also share invoices via WhatsApp, SMS, or email directly from the platform. 
+                All invoices are mobile-friendly and print-ready.
+              </p>
+            </div>
+
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+              <h3 className="text-lg font-semibold text-slate-900 mb-3">
+                Is there an invoice template library?
+              </h3>
+              <p className="text-slate-600">
+                InvoiceFlow uses modern, professional invoice templates that work for any business. 
+                Our templates are optimized for freelancers, consultants, and small businesses. 
+                No more struggling with Word templates or Excel spreadsheets.
+              </p>
+            </div>
+          </div>
         </div>
       </main>
 

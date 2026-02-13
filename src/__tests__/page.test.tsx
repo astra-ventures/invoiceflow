@@ -5,8 +5,8 @@ describe('Homepage', () => {
   it('renders the main heading', () => {
     render(<Home />)
     
-    expect(screen.getByText(/Create professional invoices in/i)).toBeInTheDocument()
-    expect(screen.getByText(/60 seconds/i)).toBeInTheDocument()
+    const heading = screen.getByRole('heading', { level: 1 })
+    expect(heading).toHaveTextContent(/Free Invoice Generator.*Professional Invoices in 60 Seconds/i)
   })
 
   it('displays InvoiceFlow branding', () => {
