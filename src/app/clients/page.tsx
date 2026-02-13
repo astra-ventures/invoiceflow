@@ -63,7 +63,7 @@ export default function ClientsPage() {
               No saved clients
             </h2>
             <p className="text-slate-600 mb-6">
-              Clients are saved when you create invoices with "Save client" checked
+              Clients are saved when you create invoices with &quot;Save client&quot; checked
             </p>
             <Link
               href="/create"

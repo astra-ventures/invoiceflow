@@ -60,7 +60,6 @@ export default function CreateInvoice() {
   const [lateFeePercent, setLateFeePercent] = useState(1.5);
   const [includeLateFee, setIncludeLateFee] = useState(true);
   const [includeContractTerms, setIncludeContractTerms] = useState(false);
-  const [savedInvoiceId, setSavedInvoiceId] = useState<string | null>(null);
 
   // V2: Stripe Payment Link
   const [stripePaymentLink, setStripePaymentLink] = useState("");
@@ -296,7 +295,6 @@ export default function CreateInvoice() {
           : undefined,
         timeEntryIds: timeEntryIds.length > 0 ? timeEntryIds : undefined,
       });
-      setSavedInvoiceId(invoice.id);
 
       // Mark time entries as billed after saving invoice
       if (timeEntryIds.length > 0) {

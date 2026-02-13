@@ -376,7 +376,6 @@ export function formatDuration(minutes: number): string {
 // ============ V2: Analytics ============
 export function getInvoiceAnalytics(): InvoiceAnalytics {
   const invoices = getInvoices();
-  const now = new Date();
 
   let totalInvoiced = 0;
   let totalPaid = 0;

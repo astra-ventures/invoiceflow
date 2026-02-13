@@ -286,7 +286,7 @@ export default function Home() {
               <p className="text-slate-600">
                 No signup required! Our invoice generator works immediately without creating an account. 
                 Just visit our invoice maker, fill in your details, and download your professional invoice in PDF format. 
-                It's the fastest way to create invoices online.
+                It&apos;s the fastest way to create invoices online.
               </p>
             </div>
 
