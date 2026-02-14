@@ -267,36 +267,13 @@ export default function RecurringPage() {
   return (
     <div className="min-h-screen bg-[#0A0F1E]">
       <AppNavbar />
-      {/* Header */}
-      <header className="bg-[#111827] border-b border-white/10">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold text-white">
-            Invoice<span className="text-blue-600">Flow</span>
-          </Link>
-          <nav className="flex items-center gap-4">
-            <Link href="/create" className="text-[#9CA3AF] hover:text-white">
-              Create
-            </Link>
-            <Link href="/history" className="text-[#9CA3AF] hover:text-white">
-              History
-            </Link>
-            <Link href="/time" className="text-[#9CA3AF] hover:text-white">
-              Time
-            </Link>
-            <span className="text-blue-600 font-medium">Recurring</span>
-            <Link href="/analytics" className="text-[#9CA3AF] hover:text-white">
-              Analytics
-            </Link>
-          </nav>
-        </div>
-      </header>
 
-      <main className="max-w-4xl mx-auto px-6 py-8">
+      <main className="max-w-4xl mx-auto px-6 py-8 pt-24">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-2xl font-bold text-white">Recurring Invoices</h1>
           <button
             onClick={() => setShowForm(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+            className="bg-[#6366F1] text-white px-4 py-2 rounded-lg hover:bg-[#818CF8] transition"
           >
             + New Recurring
           </button>
@@ -477,7 +454,7 @@ export default function RecurringPage() {
                     {formData.items.length > 1 && (
                       <button
                         onClick={() => removeItem(idx)}
-                        className="text-red-500 hover:text-red-700 p-2"
+                        className="text-[#F43F5E] hover:text-[#FB7185] p-2"
                       >
                         ×
                       </button>
@@ -486,12 +463,12 @@ export default function RecurringPage() {
                 ))}
                 <button
                   onClick={addItem}
-                  className="text-blue-600 hover:text-blue-700 text-sm"
+                  className="text-[#6366F1] hover:text-[#818CF8] text-sm"
                 >
                   + Add Item
                 </button>
 
-                <div className="pt-4 border-t border-slate-100">
+                <div className="pt-4 border-t border-white/10">
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-sm text-[#9CA3AF]">Tax Rate (%)</span>
                     <input
@@ -518,7 +495,7 @@ export default function RecurringPage() {
             </div>
 
             {/* Actions */}
-            <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-100">
+            <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-white/10">
               <button
                 onClick={resetForm}
                 className="px-4 py-2 text-[#9CA3AF] hover:text-white"
@@ -527,7 +504,7 @@ export default function RecurringPage() {
               </button>
               <button
                 onClick={handleSave}
-                className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+                className="bg-[#6366F1] text-white px-6 py-2 rounded-lg hover:bg-[#818CF8] transition"
               >
                 {editingId ? "Save Changes" : "Create Recurring"}
               </button>
@@ -538,17 +515,17 @@ export default function RecurringPage() {
         {/* List */}
         {recurring.length === 0 && !showForm ? (
           <div className="bg-[#111827] rounded-xl border border-white/10 p-12 text-center">
-            <div className="text-4xl mb-4">🔄</div>
+            
             <h3 className="text-lg font-medium text-white mb-2">
               No recurring invoices yet
             </h3>
-            <p className="text-slate-500 mb-6">
+            <p className="text-[#9CA3AF] mb-6">
               Set up recurring invoices for retainers, subscriptions, or regular
               services.
             </p>
             <button
               onClick={() => setShowForm(true)}
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+              className="bg-[#6366F1] text-white px-6 py-2 rounded-lg hover:bg-[#818CF8] transition"
             >
               Create Your First Recurring Invoice
             </button>
@@ -564,7 +541,7 @@ export default function RecurringPage() {
                 <div
                   key={rec.id}
                   className={`bg-[#111827] rounded-lg border p-4 ${
-                    rec.isActive ? "border-white/10" : "border-slate-100 bg-slate-50"
+                    rec.isActive ? "border-white/10" : "border-white/10 bg-[#0A0F1E]"
                   }`}
                 >
                   <div className="flex items-center justify-between">
@@ -576,14 +553,14 @@ export default function RecurringPage() {
                         <span
                           className={`text-xs px-2 py-0.5 rounded ${
                             rec.isActive
-                              ? "bg-green-100 text-green-700"
-                              : "bg-slate-100 text-slate-500"
+                              ? "bg-[#10B981]/20 text-[#10B981]"
+                              : "bg-[#1F2937] text-[#9CA3AF]"
                           }`}
                         >
                           {rec.isActive ? "Active" : "Paused"}
                         </span>
                       </div>
-                      <div className="text-sm text-slate-500 mt-1">
+                      <div className="text-sm text-[#9CA3AF] mt-1">
                         {rec.clientName} • {getFrequencyLabel(rec.frequency)} •
                         Next:{" "}
                         {new Date(rec.nextDueDate).toLocaleDateString()}
@@ -594,31 +571,31 @@ export default function RecurringPage() {
                         {currencySymbol[rec.currency] || rec.currency}
                         {total.toFixed(2)}
                       </div>
-                      <div className="text-xs text-slate-500">
+                      <div className="text-xs text-[#9CA3AF]">
                         {rec.generatedCount} sent
                       </div>
                     </div>
                     <div className="flex items-center gap-1">
                       <button
                         onClick={() => toggleActive(rec.id)}
-                        className={`p-2 rounded hover:bg-slate-100 transition ${
-                          rec.isActive ? "text-green-600" : "text-slate-400"
+                        className={`p-2 rounded hover:bg-[#1F2937] transition ${
+                          rec.isActive ? "text-[#10B981]" : "text-[#9CA3AF]"
                         }`}
                         title={rec.isActive ? "Pause" : "Activate"}
                       >
-                        {rec.isActive ? "⏸" : "▶"}
+                        {rec.isActive ? "❚❚" : "▸"}
                       </button>
                       <button
                         onClick={() => handleEdit(rec)}
-                        className="p-2 rounded text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition"
+                        className="p-2 rounded text-[#9CA3AF] hover:text-white hover:bg-[#1F2937] transition"
                       >
-                        ✏️
+                        Edit
                       </button>
                       <button
                         onClick={() => handleDelete(rec.id)}
-                        className="p-2 rounded text-slate-400 hover:text-red-600 hover:bg-red-50 transition"
+                        className="p-2 rounded text-[#9CA3AF] hover:text-[#F43F5E] hover:bg-[#F43F5E]/10 transition"
                       >
-                        🗑️
+                        Del
                       </button>
                     </div>
                   </div>
@@ -629,11 +606,11 @@ export default function RecurringPage() {
         )}
 
         {/* Info */}
-        <div className="mt-8 bg-blue-50 border border-blue-100 rounded-xl p-6">
-          <h3 className="font-semibold text-blue-900 mb-2">
-            📅 How Recurring Invoices Work
+        <div className="mt-8 bg-[#111827] border border-white/10 rounded-xl p-6">
+          <h3 className="font-semibold text-white mb-2">
+            How Recurring Invoices Work
           </h3>
-          <ul className="space-y-2 text-sm text-blue-800">
+          <ul className="space-y-2 text-sm text-[#9CA3AF]">
             <li>
               • Recurring invoices are templates that generate actual invoices on
               schedule
