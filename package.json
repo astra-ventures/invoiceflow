@@ -20,8 +20,8 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "stripe": "^20.3.1",
-    "@vercel/speed-insights": "^0.1.3",
-    "@vercel/analytics": "^0.1.11"
+    "@vercel/speed-insights": "^0.2.0",
+    "@vercel/analytics": "^1.4.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
