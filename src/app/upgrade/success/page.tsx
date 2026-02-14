@@ -88,7 +88,7 @@ export default function UpgradeSuccessPage() {
         <div className="bg-[#1F2937] rounded-lg p-6">
           <h3 className="text-lg font-semibold text-white mb-2">Subscription Details</h3>
           <p className="text-[#9CA3AF] mb-4">
-            InvoiceFlow Pro - $12/month
+            InvoiceFlow Pro - $9/month
           </p>
           <p className="text-sm text-[#6B7280]">
             Your subscription will automatically renew monthly. You can cancel anytime from your settings.

@@ -866,7 +866,7 @@ ${fromName}`;
                     href="/upgrade"
                     className="px-6 py-3 bg-[#6366F1] text-white rounded-lg font-semibold hover:bg-[#818CF8] hover:shadow-lg hover:shadow-[#6366F1]/25 transition-all"
                   >
-                    Upgrade to Pro ($12/month)
+                    Upgrade to Pro ($9/month)
                   </Link>
                   <button
                     type="button"

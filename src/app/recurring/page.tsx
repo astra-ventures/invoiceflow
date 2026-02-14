@@ -256,7 +256,7 @@ export default function RecurringPage() {
               className="inline-flex items-center gap-2 bg-[#6366F1] text-white px-8 py-4 rounded-lg font-semibold hover:bg-[#818CF8] hover:shadow-lg hover:shadow-[#6366F1]/25 transition-all"
             >
               <Crown className="w-5 h-5" />
-              Upgrade to Pro ($12/month)
+              Upgrade to Pro ($9/month)
             </Link>
           </div>
         </div>

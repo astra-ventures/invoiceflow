@@ -118,7 +118,7 @@ export default function UpgradePage() {
             <div className="text-center mb-8">
               <h3 className="text-xl font-semibold text-white mb-2">InvoiceFlow Pro</h3>
               <div className="flex items-baseline justify-center">
-                <span className="text-3xl font-bold text-white">$12</span>
+                <span className="text-3xl font-bold text-white">$9</span>
                 <span className="text-[#9CA3AF] ml-2">/month</span>
               </div>
               <p className="text-[#9CA3AF] mt-2">Everything in Free, plus:</p>
@@ -162,7 +162,7 @@ export default function UpgradePage() {
                   Processing...
                 </div>
               ) : (
-                'Upgrade to Pro ($12/month)'
+                'Upgrade to Pro ($9/month)'
               )}
             </button>
 
