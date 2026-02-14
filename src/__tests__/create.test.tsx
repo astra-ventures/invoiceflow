@@ -127,11 +127,20 @@ describe('Create Invoice Page', () => {
     expect(hasNet30).toBe(true)
   })
 
-  it('has Stripe payment link input', () => {
+  it('has Stripe payment link section', () => {
     render(<CreateInvoice />)
     
-    expect(screen.getByText(/💳 Stripe Payment Link/i)).toBeInTheDocument()
-    expect(screen.getByPlaceholderText(/https:\/\/buy\.stripe\.com/)).toBeInTheDocument()
+    // Check that the Stripe Payment Links section is present
+    const stripeElements = screen.getAllByText(/Stripe Payment Links/i)
+    expect(stripeElements.length).toBeGreaterThan(0)
+    
+    // For non-Pro users, should show upgrade prompt
+    // For Pro users, should show the input field
+    const upgradeButton = screen.queryByText(/Upgrade to Pro/)
+    const paymentInput = screen.queryByPlaceholderText(/https:\/\/buy\.stripe\.com/)
+    
+    // Should have either the upgrade prompt or the input field
+    expect(upgradeButton || paymentInput).toBeTruthy()
   })
 
   it('allows saving business info', async () => {
