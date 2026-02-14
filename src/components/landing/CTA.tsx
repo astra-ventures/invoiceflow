@@ -24,7 +24,8 @@ export function CTA() {
             Ready to get paid faster?
           </h2>
           <p className="mx-auto mt-6 max-w-xl text-lg text-[#9CA3AF]">
-            Join thousands of freelancers and small businesses creating professional invoices in seconds. No signup. No credit card. Just results.
+            Stop wrestling with spreadsheets and Word docs. Create professional
+            invoices in 60 seconds — completely free, no account needed.
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
@@ -32,10 +33,15 @@ export function CTA() {
               className="group flex items-center gap-2 rounded-xl bg-[#F59E0B] px-8 py-4 text-base font-semibold text-[#0A0F1E] shadow-xl shadow-[#F59E0B]/20 transition-all hover:bg-[#FBBF24] hover:shadow-2xl hover:shadow-[#F59E0B]/30"
             >
               Create Your First Invoice
-              <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+              <ArrowRight
+                size={18}
+                className="transition-transform group-hover:translate-x-1"
+              />
             </Link>
           </div>
-          <p className="mt-4 text-sm text-[#6B7280]">Free forever · No account needed · PDF in 60 seconds</p>
+          <p className="mt-4 text-sm text-[#6B7280]">
+            Free forever · No account needed · PDF in 60 seconds
+          </p>
         </motion.div>
       </div>
     </section>

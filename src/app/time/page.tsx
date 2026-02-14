@@ -31,35 +31,24 @@ export default function TimeTrackingPage() {
   const [selectedClient, setSelectedClient] = useState<string>("");
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Load data
   useEffect(() => {
     setEntries(getTimeEntries());
     setClients(getClients());
   }, []);
 
-  // Timer effect
   useEffect(() => {
     if (isTracking && startTime) {
       intervalRef.current = setInterval(() => {
         setElapsedSeconds(Math.floor((Date.now() - startTime.getTime()) / 1000));
       }, 1000);
     } else {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
+      if (intervalRef.current) clearInterval(intervalRef.current);
     }
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
   }, [isTracking, startTime]);
 
   const startTimer = () => {
-    if (!currentEntry.description) {
-      alert("Please enter a description");
-      return;
-    }
+    if (!currentEntry.description) { alert("Please enter a description"); return; }
     setStartTime(new Date());
     setIsTracking(true);
     setElapsedSeconds(0);
@@ -67,10 +56,8 @@ export default function TimeTrackingPage() {
 
   const stopTimer = () => {
     if (!startTime) return;
-    
     const endTime = new Date();
     const durationMinutes = Math.ceil((endTime.getTime() - startTime.getTime()) / 60000);
-    
     const entry = saveTimeEntry({
       clientId: clients.find((c) => c.name === currentEntry.clientName)?.id,
       clientName: currentEntry.clientName || "No Client",
@@ -82,25 +69,16 @@ export default function TimeTrackingPage() {
       hourlyRate: currentEntry.hourlyRate || 0,
       isBilled: false,
     });
-
     setEntries([entry, ...entries]);
     setIsTracking(false);
     setStartTime(null);
     setElapsedSeconds(0);
-    setCurrentEntry({
-      ...currentEntry,
-      description: "",
-      projectName: "",
-    });
+    setCurrentEntry({ ...currentEntry, description: "", projectName: "" });
   };
 
   const addManualEntry = () => {
     const durationMinutes = parseInt(prompt("Duration in minutes:") || "0", 10);
-    if (!durationMinutes || !currentEntry.description) {
-      alert("Please enter duration and description");
-      return;
-    }
-
+    if (!durationMinutes || !currentEntry.description) { alert("Please enter duration and description"); return; }
     const entry = saveTimeEntry({
       clientId: clients.find((c) => c.name === currentEntry.clientName)?.id,
       clientName: currentEntry.clientName || "No Client",
@@ -111,13 +89,8 @@ export default function TimeTrackingPage() {
       hourlyRate: currentEntry.hourlyRate || 0,
       isBilled: false,
     });
-
     setEntries([entry, ...entries]);
-    setCurrentEntry({
-      ...currentEntry,
-      description: "",
-      projectName: "",
-    });
+    setCurrentEntry({ ...currentEntry, description: "", projectName: "" });
   };
 
   const handleDelete = (id: string) => {
@@ -131,9 +104,7 @@ export default function TimeTrackingPage() {
     const entry = entries.find((e) => e.id === id);
     if (entry) {
       updateTimeEntry(id, { isBilled: !entry.isBilled });
-      setEntries(
-        entries.map((e) => (e.id === id ? { ...e, isBilled: !e.isBilled } : e))
-      );
+      setEntries(entries.map((e) => (e.id === id ? { ...e, isBilled: !e.isBilled } : e)));
     }
   };
 
@@ -141,28 +112,16 @@ export default function TimeTrackingPage() {
     const h = Math.floor(seconds / 3600);
     const m = Math.floor((seconds % 3600) / 60);
     const s = seconds % 60;
-    return `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}:${s
-      .toString()
-      .padStart(2, "0")}`;
+    return `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
   };
 
-  // Filter entries
   let filteredEntries = entries;
-  if (filter === "unbilled") {
-    filteredEntries = entries.filter((e) => !e.isBilled);
-  } else if (filter === "billed") {
-    filteredEntries = entries.filter((e) => e.isBilled);
-  }
-  if (selectedClient) {
-    filteredEntries = filteredEntries.filter((e) => e.clientName === selectedClient);
-  }
+  if (filter === "unbilled") filteredEntries = entries.filter((e) => !e.isBilled);
+  else if (filter === "billed") filteredEntries = entries.filter((e) => e.isBilled);
+  if (selectedClient) filteredEntries = filteredEntries.filter((e) => e.clientName === selectedClient);
 
-  // Calculate totals
   const unbilledEntries = getUnbilledTimeEntries();
-  const unbilledTotal = unbilledEntries.reduce(
-    (sum, e) => sum + (e.durationMinutes / 60) * e.hourlyRate,
-    0
-  );
+  const unbilledTotal = unbilledEntries.reduce((sum, e) => sum + (e.durationMinutes / 60) * e.hourlyRate, 0);
   const unbilledHours = unbilledEntries.reduce((sum, e) => sum + e.durationMinutes, 0);
 
   return (
@@ -175,77 +134,49 @@ export default function TimeTrackingPage() {
         {/* Timer Card */}
         <div className="bg-[#111827] rounded-xl border border-white/10 p-6 mb-8">
           <div className="flex flex-col md:flex-row gap-6">
-            {/* Timer Display */}
             <div className="flex-shrink-0 text-center md:text-left">
-              <div
-                className={`text-5xl font-mono font-bold ${
-                  isTracking ? "text-[#10B981]" : "text-[#4B5563]"
-                }`}
-              >
+              <div className={`text-5xl font-mono font-bold ${isTracking ? "text-[#34D399]" : "text-[#4B5563]"}`}>
                 {formatTime(elapsedSeconds)}
               </div>
               <div className="mt-4 flex gap-2 justify-center md:justify-start">
                 {!isTracking ? (
                   <>
-                    <button
-                      onClick={startTimer}
-                      className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition flex items-center gap-2"
-                    >
+                    <button onClick={startTimer} className="bg-[#10B981] text-white px-6 py-2 rounded-lg hover:bg-[#059669] transition flex items-center gap-2">
                       ▶ Start
                     </button>
-                    <button
-                      onClick={addManualEntry}
-                      className="text-[#9CA3AF] px-4 py-2 rounded-lg border border-white/10 hover:bg-[#0A0F1E] transition"
-                    >
+                    <button onClick={addManualEntry} className="text-[#9CA3AF] px-4 py-2 rounded-lg border border-white/10 hover:bg-[#1F2937] transition">
                       + Manual
                     </button>
                   </>
                 ) : (
-                  <button
-                    onClick={stopTimer}
-                    className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition flex items-center gap-2"
-                  >
+                  <button onClick={stopTimer} className="bg-[#F43F5E] text-white px-6 py-2 rounded-lg hover:bg-[#E11D48] transition flex items-center gap-2">
                     ⏹ Stop
                   </button>
                 )}
               </div>
             </div>
 
-            {/* Entry Form */}
             <div className="flex-1 space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm text-[#9CA3AF] mb-1">Client</label>
                   <select
                     value={currentEntry.clientName}
-                    onChange={(e) =>
-                      setCurrentEntry({ ...currentEntry, clientName: e.target.value })
-                    }
-                    className="w-full px-3 py-2 rounded-lg border border-white/10 focus:border-blue-500 outline-none"
+                    onChange={(e) => setCurrentEntry({ ...currentEntry, clientName: e.target.value })}
+                    className="w-full px-3 py-2 rounded-lg bg-[#1F2937] border border-white/10 text-white focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1] outline-none"
                     disabled={isTracking}
                   >
                     <option value="">No Client</option>
-                    {clients.map((c) => (
-                      <option key={c.id} value={c.name}>
-                        {c.name}
-                      </option>
-                    ))}
+                    {clients.map((c) => (<option key={c.id} value={c.name}>{c.name}</option>))}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm text-[#9CA3AF] mb-1">
-                    Hourly Rate ($)
-                  </label>
+                  <label className="block text-sm text-[#9CA3AF] mb-1">Hourly Rate ($)</label>
                   <input
                     type="number"
                     value={currentEntry.hourlyRate}
-                    onChange={(e) =>
-                      setCurrentEntry({
-                        ...currentEntry,
-                        hourlyRate: parseFloat(e.target.value) || 0,
-                      })
-                    }
-                    className="w-full px-3 py-2 rounded-lg border border-white/10 focus:border-blue-500 outline-none"
+                    onChange={(e) => setCurrentEntry({ ...currentEntry, hourlyRate: parseFloat(e.target.value) || 0 })}
+                    className="w-full px-3 py-2 rounded-lg bg-[#1F2937] border border-white/10 text-white focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1] outline-none"
                     disabled={isTracking}
                   />
                 </div>
@@ -255,26 +186,20 @@ export default function TimeTrackingPage() {
                 <input
                   type="text"
                   value={currentEntry.projectName}
-                  onChange={(e) =>
-                    setCurrentEntry({ ...currentEntry, projectName: e.target.value })
-                  }
+                  onChange={(e) => setCurrentEntry({ ...currentEntry, projectName: e.target.value })}
                   placeholder="e.g., Website Redesign"
-                  className="w-full px-3 py-2 rounded-lg border border-white/10 focus:border-blue-500 outline-none"
+                  className="w-full px-3 py-2 rounded-lg bg-[#1F2937] border border-white/10 text-white placeholder-[#6B7280] focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1] outline-none"
                   disabled={isTracking}
                 />
               </div>
               <div>
-                <label className="block text-sm text-[#9CA3AF] mb-1">
-                  What are you working on? *
-                </label>
+                <label className="block text-sm text-[#9CA3AF] mb-1">What are you working on? *</label>
                 <input
                   type="text"
                   value={currentEntry.description}
-                  onChange={(e) =>
-                    setCurrentEntry({ ...currentEntry, description: e.target.value })
-                  }
+                  onChange={(e) => setCurrentEntry({ ...currentEntry, description: e.target.value })}
                   placeholder="e.g., Homepage mockup design"
-                  className="w-full px-3 py-2 rounded-lg border border-white/10 focus:border-blue-500 outline-none"
+                  className="w-full px-3 py-2 rounded-lg bg-[#1F2937] border border-white/10 text-white placeholder-[#6B7280] focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1] outline-none"
                   disabled={isTracking}
                 />
               </div>
@@ -282,21 +207,18 @@ export default function TimeTrackingPage() {
           </div>
         </div>
 
-        {/* Unbilled Summary */}
+        {/* Unbilled Summary — dark themed */}
         {unbilledEntries.length > 0 && (
-          <div className="bg-amber-50 border border-amber-100 rounded-xl p-4 mb-6 flex items-center justify-between">
+          <div className="bg-[#F59E0B]/10 border border-[#F59E0B]/20 rounded-xl p-4 mb-6 flex items-center justify-between">
             <div>
-              <div className="font-medium text-amber-900">
+              <div className="font-medium text-[#FBBF24]">
                 {formatDuration(unbilledHours)} unbilled time
               </div>
-              <div className="text-sm text-amber-700">
+              <div className="text-sm text-[#F59E0B]/80">
                 Worth ${unbilledTotal.toFixed(2)} across {unbilledEntries.length} entries
               </div>
             </div>
-            <Link
-              href="/create"
-              className="bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 transition text-sm"
-            >
+            <Link href="/create" className="bg-[#F59E0B] text-[#0A0F1E] font-medium px-4 py-2 rounded-lg hover:bg-[#FBBF24] transition text-sm">
               Create Invoice →
             </Link>
           </div>
@@ -310,9 +232,7 @@ export default function TimeTrackingPage() {
                 key={f}
                 onClick={() => setFilter(f)}
                 className={`px-4 py-1.5 rounded-md text-sm transition ${
-                  filter === f
-                    ? "bg-[#111827] text-white shadow-sm"
-                    : "text-[#9CA3AF] hover:text-white"
+                  filter === f ? "bg-[#111827] text-white shadow-sm" : "text-[#9CA3AF] hover:text-white"
                 }`}
               >
                 {f.charAt(0).toUpperCase() + f.slice(1)}
@@ -322,13 +242,11 @@ export default function TimeTrackingPage() {
           <select
             value={selectedClient}
             onChange={(e) => setSelectedClient(e.target.value)}
-            className="px-3 py-2 rounded-lg border border-white/10 text-sm"
+            className="px-3 py-2 rounded-lg bg-[#1F2937] border border-white/10 text-white text-sm"
           >
             <option value="">All Clients</option>
             {[...new Set(entries.map((e) => e.clientName))].map((name) => (
-              <option key={name} value={name}>
-                {name}
-              </option>
+              <option key={name} value={name}>{name}</option>
             ))}
           </select>
         </div>
@@ -337,31 +255,22 @@ export default function TimeTrackingPage() {
         <div className="space-y-2">
           {filteredEntries.length === 0 ? (
             <div className="bg-[#111827] rounded-xl border border-white/10 p-12 text-center">
-              
-              <h3 className="text-lg font-medium text-white mb-2">
-                No time entries yet
-              </h3>
-              <p className="text-[#9CA3AF]">
-                Start the timer or add a manual entry to track your work.
-              </p>
+              <h3 className="text-lg font-medium text-white mb-2">No time entries yet</h3>
+              <p className="text-[#9CA3AF]">Start the timer or add a manual entry to track your work.</p>
             </div>
           ) : (
             filteredEntries.map((entry) => (
               <div
                 key={entry.id}
                 className={`bg-[#111827] rounded-lg border p-4 flex items-center gap-4 ${
-                  entry.isBilled ? "border-[#1F2937] bg-[#0A0F1E]" : "border-white/10"
+                  entry.isBilled ? "border-[#1F2937] bg-[#0A0F1E]/50" : "border-white/10"
                 }`}
               >
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <span className="font-medium text-white truncate">
-                      {entry.description}
-                    </span>
+                    <span className="font-medium text-white truncate">{entry.description}</span>
                     {entry.isBilled && (
-                      <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">
-                        Billed
-                      </span>
+                      <span className="text-xs bg-[#10B981]/15 text-[#34D399] px-2 py-0.5 rounded">Billed</span>
                     )}
                   </div>
                   <div className="text-sm text-[#9CA3AF] mt-1">
@@ -372,26 +281,20 @@ export default function TimeTrackingPage() {
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="font-mono font-medium text-white">
-                    {formatDuration(entry.durationMinutes)}
-                  </div>
-                  <div className="text-sm text-[#9CA3AF]">
-                    ${((entry.durationMinutes / 60) * entry.hourlyRate).toFixed(2)}
-                  </div>
+                  <div className="font-mono font-medium text-white">{formatDuration(entry.durationMinutes)}</div>
+                  <div className="text-sm text-[#9CA3AF]">${((entry.durationMinutes / 60) * entry.hourlyRate).toFixed(2)}</div>
                 </div>
                 <div className="flex items-center gap-1">
                   <button
                     onClick={() => toggleBilled(entry.id)}
-                    className={`p-2 rounded hover:bg-[#1F2937] transition ${
-                      entry.isBilled ? "text-[#10B981]" : "text-[#9CA3AF]"
-                    }`}
+                    className={`p-2 rounded hover:bg-[#1F2937] transition ${entry.isBilled ? "text-[#34D399]" : "text-[#9CA3AF]"}`}
                     title={entry.isBilled ? "Mark unbilled" : "Mark billed"}
                   >
                     {entry.isBilled ? "✓" : "○"}
                   </button>
                   <button
                     onClick={() => handleDelete(entry.id)}
-                    className="p-2 rounded text-[#9CA3AF] hover:text-[#F43F5E] hover:bg-[#F43F5E]/10 transition"
+                    className="p-2 rounded text-[#9CA3AF] hover:text-[#FB7185] hover:bg-[#F43F5E]/10 transition"
                   >
                     ×
                   </button>

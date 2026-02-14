@@ -56,7 +56,7 @@ export default function AnalyticsPage() {
           </div>
           <div className="bg-[#111827] p-6 rounded-xl border border-white/10">
             <div className="text-sm text-[#9CA3AF] mb-1">Total Paid</div>
-            <div className="text-2xl font-bold text-green-600">
+            <div className="text-2xl font-bold text-[#34D399]">
               {formatCurrency(analytics.totalPaid)}
             </div>
             <div className="text-xs text-[#6B7280] mt-1">
@@ -65,14 +65,14 @@ export default function AnalyticsPage() {
           </div>
           <div className="bg-[#111827] p-6 rounded-xl border border-white/10">
             <div className="text-sm text-[#9CA3AF] mb-1">Outstanding</div>
-            <div className="text-2xl font-bold text-amber-600">
+            <div className="text-2xl font-bold text-[#FBBF24]">
               {formatCurrency(analytics.totalOutstanding)}
             </div>
             <div className="text-xs text-[#6B7280] mt-1">awaiting payment</div>
           </div>
           <div className="bg-[#111827] p-6 rounded-xl border border-white/10">
             <div className="text-sm text-[#9CA3AF] mb-1">Overdue</div>
-            <div className="text-2xl font-bold text-red-600">
+            <div className="text-2xl font-bold text-[#FB7185]">
               {formatCurrency(analytics.totalOverdue)}
             </div>
             <div className="text-xs text-[#6B7280] mt-1">
@@ -104,7 +104,7 @@ export default function AnalyticsPage() {
             </div>
             <div className="mt-4 h-2 bg-[#1F2937] rounded-full overflow-hidden">
               <div
-                className="h-full bg-green-500 rounded-full"
+                className="h-full bg-[#10B981] rounded-full"
                 style={{
                   width: `${
                     analytics.invoiceCount > 0
@@ -147,7 +147,7 @@ export default function AnalyticsPage() {
                     className="flex-1 flex flex-col items-center"
                   >
                     <div
-                      className="w-full bg-blue-500 rounded-t hover:bg-[#6366F1] transition-colors cursor-pointer"
+                      className="w-full bg-[#6366F1] rounded-t hover:bg-[#818CF8] transition-colors cursor-pointer"
                       style={{
                         height: `${(month.amount / maxRevenue) * 160}px`,
                         minHeight: month.amount > 0 ? "4px" : "0",
@@ -183,7 +183,7 @@ export default function AnalyticsPage() {
                       </div>
                       <div className="h-2 bg-[#1F2937] rounded-full overflow-hidden mt-1">
                         <div
-                          className="h-full bg-blue-500 rounded-full"
+                          className="h-full bg-[#6366F1] rounded-full"
                           style={{
                             width: `${
                               (client.total / (analytics.topClients[0]?.total || 1)) * 100
@@ -207,9 +207,9 @@ export default function AnalyticsPage() {
         </div>
 
         {/* Tips */}
-        <div className="bg-blue-50 border border-blue-100 rounded-xl p-6">
-          <h3 className="font-semibold text-blue-900 mb-2">💡 Tips to Get Paid Faster</h3>
-          <ul className="space-y-2 text-sm text-blue-800">
+        <div className="bg-[#6366F1]/10 border border-[#6366F1]/20 rounded-xl p-6">
+          <h3 className="font-semibold text-[#818CF8] mb-2">💡 Tips to Get Paid Faster</h3>
+          <ul className="space-y-2 text-sm text-[#9CA3AF]">
             <li>
               • <strong>Send immediately:</strong> Invoices sent within 24 hours of work completion get paid 1.5x faster
             </li>
