@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { AppNavbar } from "../_components/AppNavbar";
 import {
   getRecurringInvoices,
   saveRecurringInvoice,
@@ -200,25 +199,25 @@ export default function RecurringPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0F1E]">
+    <div className="min-h-screen bg-slate-50">
       {/* Header */}
-      <header className="bg-[#111827] border-b border-white/20">
+      <header className="bg-white border-b border-slate-200">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold text-white">
-            Invoice<span className="text-[#6366F1]">Flow</span>
+          <Link href="/" className="text-2xl font-bold text-slate-900">
+            Invoice<span className="text-blue-600">Flow</span>
           </Link>
           <nav className="flex items-center gap-4">
-            <Link href="/create" className="text-[#9CA3AF] hover:text-white">
+            <Link href="/create" className="text-slate-600 hover:text-slate-900">
               Create
             </Link>
-            <Link href="/history" className="text-[#9CA3AF] hover:text-white">
+            <Link href="/history" className="text-slate-600 hover:text-slate-900">
               History
             </Link>
-            <Link href="/time" className="text-[#9CA3AF] hover:text-white">
+            <Link href="/time" className="text-slate-600 hover:text-slate-900">
               Time
             </Link>
-            <span className="text-[#6366F1] font-medium">Recurring</span>
-            <Link href="/analytics" className="text-[#9CA3AF] hover:text-white">
+            <span className="text-blue-600 font-medium">Recurring</span>
+            <Link href="/analytics" className="text-slate-600 hover:text-slate-900">
               Analytics
             </Link>
           </nav>
@@ -227,10 +226,10 @@ export default function RecurringPage() {
 
       <main className="max-w-4xl mx-auto px-6 py-8">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-2xl font-bold text-white">Recurring Invoices</h1>
+          <h1 className="text-2xl font-bold text-slate-900">Recurring Invoices</h1>
           <button
             onClick={() => setShowForm(true)}
-            className="bg-[#6366F1] text-white px-4 py-2 rounded-lg hover:bg-[#818CF8] transition"
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
           >
             + New Recurring
           </button>
@@ -238,8 +237,8 @@ export default function RecurringPage() {
 
         {/* Form */}
         {showForm && (
-          <div className="bg-[#111827] rounded-xl border border-white/20 p-6 mb-8">
-            <h2 className="font-semibold text-white mb-4">
+          <div className="bg-white rounded-xl border border-slate-200 p-6 mb-8">
+            <h2 className="font-semibold text-slate-900 mb-4">
               {editingId ? "Edit" : "New"} Recurring Invoice
             </h2>
 
@@ -247,7 +246,7 @@ export default function RecurringPage() {
               {/* Left Column */}
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm text-[#9CA3AF] mb-1">Name</label>
+                  <label className="block text-sm text-slate-600 mb-1">Name</label>
                   <input
                     type="text"
                     value={formData.name}
@@ -255,16 +254,16 @@ export default function RecurringPage() {
                       setFormData({ ...formData, name: e.target.value })
                     }
                     placeholder="e.g., Monthly Retainer"
-                    className="w-full px-3 py-2 rounded-lg border border-white/20 focus:border-blue-500 outline-none"
+                    className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:border-blue-500 outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm text-[#9CA3AF] mb-1">Client</label>
+                  <label className="block text-sm text-slate-600 mb-1">Client</label>
                   <select
                     value={formData.clientId}
                     onChange={(e) => handleClientSelect(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-white/20 focus:border-blue-500 outline-none"
+                    className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:border-blue-500 outline-none"
                   >
                     <option value="">Select client or type below</option>
                     {clients.map((c) => (
@@ -278,7 +277,7 @@ export default function RecurringPage() {
                 {!formData.clientId && (
                   <>
                     <div>
-                      <label className="block text-sm text-[#9CA3AF] mb-1">
+                      <label className="block text-sm text-slate-600 mb-1">
                         Client Name *
                       </label>
                       <input
@@ -287,11 +286,11 @@ export default function RecurringPage() {
                         onChange={(e) =>
                           setFormData({ ...formData, clientName: e.target.value })
                         }
-                        className="w-full px-3 py-2 rounded-lg border border-white/20 focus:border-blue-500 outline-none"
+                        className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:border-blue-500 outline-none"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm text-[#9CA3AF] mb-1">
+                      <label className="block text-sm text-slate-600 mb-1">
                         Client Email
                       </label>
                       <input
@@ -300,7 +299,7 @@ export default function RecurringPage() {
                         onChange={(e) =>
                           setFormData({ ...formData, clientEmail: e.target.value })
                         }
-                        className="w-full px-3 py-2 rounded-lg border border-white/20 focus:border-blue-500 outline-none"
+                        className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:border-blue-500 outline-none"
                       />
                     </div>
                   </>
@@ -308,7 +307,7 @@ export default function RecurringPage() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm text-[#9CA3AF] mb-1">
+                    <label className="block text-sm text-slate-600 mb-1">
                       Frequency
                     </label>
                     <select
@@ -319,7 +318,7 @@ export default function RecurringPage() {
                           frequency: e.target.value as RecurringInvoice["frequency"],
                         })
                       }
-                      className="w-full px-3 py-2 rounded-lg border border-white/20 focus:border-blue-500 outline-none"
+                      className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:border-blue-500 outline-none"
                     >
                       <option value="weekly">Weekly</option>
                       <option value="biweekly">Every 2 Weeks</option>
@@ -329,7 +328,7 @@ export default function RecurringPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm text-[#9CA3AF] mb-1">
+                    <label className="block text-sm text-slate-600 mb-1">
                       Currency
                     </label>
                     <select
@@ -337,7 +336,7 @@ export default function RecurringPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, currency: e.target.value })
                       }
-                      className="w-full px-3 py-2 rounded-lg border border-white/20 focus:border-blue-500 outline-none"
+                      className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:border-blue-500 outline-none"
                     >
                       <option value="USD">USD ($)</option>
                       <option value="EUR">EUR (€)</option>
@@ -350,7 +349,7 @@ export default function RecurringPage() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm text-[#9CA3AF] mb-1">
+                    <label className="block text-sm text-slate-600 mb-1">
                       Start Date
                     </label>
                     <input
@@ -359,11 +358,11 @@ export default function RecurringPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, startDate: e.target.value })
                       }
-                      className="w-full px-3 py-2 rounded-lg border border-white/20 focus:border-blue-500 outline-none"
+                      className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:border-blue-500 outline-none"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm text-[#9CA3AF] mb-1">
+                    <label className="block text-sm text-slate-600 mb-1">
                       End Date (optional)
                     </label>
                     <input
@@ -372,7 +371,7 @@ export default function RecurringPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, endDate: e.target.value })
                       }
-                      className="w-full px-3 py-2 rounded-lg border border-white/20 focus:border-blue-500 outline-none"
+                      className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:border-blue-500 outline-none"
                     />
                   </div>
                 </div>
@@ -380,7 +379,7 @@ export default function RecurringPage() {
 
               {/* Right Column - Line Items */}
               <div className="space-y-4">
-                <label className="block text-sm text-[#9CA3AF]">Line Items</label>
+                <label className="block text-sm text-slate-600">Line Items</label>
                 {formData.items.map((item, idx) => (
                   <div key={idx} className="flex gap-2 items-start">
                     <input
@@ -388,7 +387,7 @@ export default function RecurringPage() {
                       value={item.description}
                       onChange={(e) => updateItem(idx, "description", e.target.value)}
                       placeholder="Description"
-                      className="flex-1 px-3 py-2 rounded-lg border border-white/20 focus:border-blue-500 outline-none text-sm"
+                      className="flex-1 px-3 py-2 rounded-lg border border-slate-200 focus:border-blue-500 outline-none text-sm"
                     />
                     <input
                       type="number"
@@ -396,7 +395,7 @@ export default function RecurringPage() {
                       onChange={(e) =>
                         updateItem(idx, "quantity", parseFloat(e.target.value) || 0)
                       }
-                      className="w-16 px-2 py-2 rounded-lg border border-white/20 focus:border-blue-500 outline-none text-sm"
+                      className="w-16 px-2 py-2 rounded-lg border border-slate-200 focus:border-blue-500 outline-none text-sm"
                       placeholder="Qty"
                     />
                     <input
@@ -405,7 +404,7 @@ export default function RecurringPage() {
                       onChange={(e) =>
                         updateItem(idx, "unitPrice", parseFloat(e.target.value) || 0)
                       }
-                      className="w-24 px-2 py-2 rounded-lg border border-white/20 focus:border-blue-500 outline-none text-sm"
+                      className="w-24 px-2 py-2 rounded-lg border border-slate-200 focus:border-blue-500 outline-none text-sm"
                       placeholder="Price"
                     />
                     {formData.items.length > 1 && (
@@ -420,14 +419,14 @@ export default function RecurringPage() {
                 ))}
                 <button
                   onClick={addItem}
-                  className="text-[#6366F1] hover:text-blue-700 text-sm"
+                  className="text-blue-600 hover:text-blue-700 text-sm"
                 >
                   + Add Item
                 </button>
 
                 <div className="pt-4 border-t border-slate-100">
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm text-[#9CA3AF]">Tax Rate (%)</span>
+                    <span className="text-sm text-slate-600">Tax Rate (%)</span>
                     <input
                       type="number"
                       value={formData.taxRate}
@@ -437,7 +436,7 @@ export default function RecurringPage() {
                           taxRate: parseFloat(e.target.value) || 0,
                         })
                       }
-                      className="w-20 px-2 py-1 rounded border border-white/20 text-right text-sm"
+                      className="w-20 px-2 py-1 rounded border border-slate-200 text-right text-sm"
                     />
                   </div>
                   <div className="flex justify-between items-center font-semibold">
@@ -455,13 +454,13 @@ export default function RecurringPage() {
             <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-100">
               <button
                 onClick={resetForm}
-                className="px-4 py-2 text-[#9CA3AF] hover:text-white"
+                className="px-4 py-2 text-slate-600 hover:text-slate-900"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSave}
-                className="bg-[#6366F1] text-white px-6 py-2 rounded-lg hover:bg-[#818CF8] transition"
+                className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
               >
                 {editingId ? "Save Changes" : "Create Recurring"}
               </button>
@@ -471,9 +470,9 @@ export default function RecurringPage() {
 
         {/* List */}
         {recurring.length === 0 && !showForm ? (
-          <div className="bg-[#111827] rounded-xl border border-white/20 p-12 text-center">
+          <div className="bg-white rounded-xl border border-slate-200 p-12 text-center">
             <div className="text-4xl mb-4">🔄</div>
-            <h3 className="text-lg font-medium text-white mb-2">
+            <h3 className="text-lg font-medium text-slate-900 mb-2">
               No recurring invoices yet
             </h3>
             <p className="text-slate-500 mb-6">
@@ -482,7 +481,7 @@ export default function RecurringPage() {
             </p>
             <button
               onClick={() => setShowForm(true)}
-              className="bg-[#6366F1] text-white px-6 py-2 rounded-lg hover:bg-[#818CF8] transition"
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
             >
               Create Your First Recurring Invoice
             </button>
@@ -497,14 +496,14 @@ export default function RecurringPage() {
               return (
                 <div
                   key={rec.id}
-                  className={`bg-[#111827] rounded-lg border p-4 ${
-                    rec.isActive ? "border-white/20" : "border-slate-100 bg-[#0A0F1E]"
+                  className={`bg-white rounded-lg border p-4 ${
+                    rec.isActive ? "border-slate-200" : "border-slate-100 bg-slate-50"
                   }`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="font-medium text-white">
+                        <span className="font-medium text-slate-900">
                           {rec.name || rec.clientName}
                         </span>
                         <span
@@ -524,7 +523,7 @@ export default function RecurringPage() {
                       </div>
                     </div>
                     <div className="text-right mr-4">
-                      <div className="font-semibold text-white">
+                      <div className="font-semibold text-slate-900">
                         {currencySymbol[rec.currency] || rec.currency}
                         {total.toFixed(2)}
                       </div>

@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { AppNavbar } from "../_components/AppNavbar";
 import {
   getTimeEntries,
   saveTimeEntry,
@@ -166,14 +165,36 @@ export default function TimeTrackingPage() {
   const unbilledHours = unbilledEntries.reduce((sum, e) => sum + e.durationMinutes, 0);
 
   return (
-    <div className="min-h-screen bg-[#0A0F1E]">
-      <AppNavbar />
-      
-      <main className="max-w-4xl mx-auto px-6 pt-24 pb-8">
-        <h1 className="text-2xl font-bold text-white mb-8">Time Tracking</h1>
+    <div className="min-h-screen bg-slate-50">
+      {/* Header */}
+      <header className="bg-white border-b border-slate-200">
+        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+          <Link href="/" className="text-2xl font-bold text-slate-900">
+            Invoice<span className="text-blue-600">Flow</span>
+          </Link>
+          <nav className="flex items-center gap-4">
+            <Link href="/create" className="text-slate-600 hover:text-slate-900">
+              Create
+            </Link>
+            <Link href="/history" className="text-slate-600 hover:text-slate-900">
+              History
+            </Link>
+            <span className="text-blue-600 font-medium">Time</span>
+            <Link href="/recurring" className="text-slate-600 hover:text-slate-900">
+              Recurring
+            </Link>
+            <Link href="/analytics" className="text-slate-600 hover:text-slate-900">
+              Analytics
+            </Link>
+          </nav>
+        </div>
+      </header>
+
+      <main className="max-w-4xl mx-auto px-6 py-8">
+        <h1 className="text-2xl font-bold text-slate-900 mb-8">Time Tracking</h1>
 
         {/* Timer Card */}
-        <div className="bg-[#111827] rounded-xl border border-white/20 p-6 mb-8">
+        <div className="bg-white rounded-xl border border-slate-200 p-6 mb-8">
           <div className="flex flex-col md:flex-row gap-6">
             {/* Timer Display */}
             <div className="flex-shrink-0 text-center md:text-left">
@@ -195,7 +216,7 @@ export default function TimeTrackingPage() {
                     </button>
                     <button
                       onClick={addManualEntry}
-                      className="text-[#9CA3AF] px-4 py-2 rounded-lg border border-white/20 hover:bg-slate-50 transition"
+                      className="text-slate-600 px-4 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 transition"
                     >
                       + Manual
                     </button>
@@ -215,13 +236,13 @@ export default function TimeTrackingPage() {
             <div className="flex-1 space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm text-[#9CA3AF] mb-1">Client</label>
+                  <label className="block text-sm text-slate-600 mb-1">Client</label>
                   <select
                     value={currentEntry.clientName}
                     onChange={(e) =>
                       setCurrentEntry({ ...currentEntry, clientName: e.target.value })
                     }
-                    className="w-full px-3 py-2 rounded-lg border border-white/20 focus:border-blue-500 outline-none"
+                    className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:border-blue-500 outline-none"
                     disabled={isTracking}
                   >
                     <option value="">No Client</option>
@@ -233,7 +254,7 @@ export default function TimeTrackingPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm text-[#9CA3AF] mb-1">
+                  <label className="block text-sm text-slate-600 mb-1">
                     Hourly Rate ($)
                   </label>
                   <input
@@ -245,13 +266,13 @@ export default function TimeTrackingPage() {
                         hourlyRate: parseFloat(e.target.value) || 0,
                       })
                     }
-                    className="w-full px-3 py-2 rounded-lg border border-white/20 focus:border-blue-500 outline-none"
+                    className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:border-blue-500 outline-none"
                     disabled={isTracking}
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-sm text-[#9CA3AF] mb-1">Project</label>
+                <label className="block text-sm text-slate-600 mb-1">Project</label>
                 <input
                   type="text"
                   value={currentEntry.projectName}
@@ -259,12 +280,12 @@ export default function TimeTrackingPage() {
                     setCurrentEntry({ ...currentEntry, projectName: e.target.value })
                   }
                   placeholder="e.g., Website Redesign"
-                  className="w-full px-3 py-2 rounded-lg border border-white/20 focus:border-blue-500 outline-none"
+                  className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:border-blue-500 outline-none"
                   disabled={isTracking}
                 />
               </div>
               <div>
-                <label className="block text-sm text-[#9CA3AF] mb-1">
+                <label className="block text-sm text-slate-600 mb-1">
                   What are you working on? *
                 </label>
                 <input
@@ -274,7 +295,7 @@ export default function TimeTrackingPage() {
                     setCurrentEntry({ ...currentEntry, description: e.target.value })
                   }
                   placeholder="e.g., Homepage mockup design"
-                  className="w-full px-3 py-2 rounded-lg border border-white/20 focus:border-blue-500 outline-none"
+                  className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:border-blue-500 outline-none"
                   disabled={isTracking}
                 />
               </div>
@@ -311,8 +332,8 @@ export default function TimeTrackingPage() {
                 onClick={() => setFilter(f)}
                 className={`px-4 py-1.5 rounded-md text-sm transition ${
                   filter === f
-                    ? "bg-[#111827] text-white shadow-sm"
-                    : "text-[#9CA3AF] hover:text-white"
+                    ? "bg-white text-slate-900 shadow-sm"
+                    : "text-slate-600 hover:text-slate-900"
                 }`}
               >
                 {f.charAt(0).toUpperCase() + f.slice(1)}
@@ -322,7 +343,7 @@ export default function TimeTrackingPage() {
           <select
             value={selectedClient}
             onChange={(e) => setSelectedClient(e.target.value)}
-            className="px-3 py-2 rounded-lg border border-white/20 text-sm"
+            className="px-3 py-2 rounded-lg border border-slate-200 text-sm"
           >
             <option value="">All Clients</option>
             {[...new Set(entries.map((e) => e.clientName))].map((name) => (
@@ -336,9 +357,9 @@ export default function TimeTrackingPage() {
         {/* Time Entries List */}
         <div className="space-y-2">
           {filteredEntries.length === 0 ? (
-            <div className="bg-[#111827] rounded-xl border border-white/20 p-12 text-center">
+            <div className="bg-white rounded-xl border border-slate-200 p-12 text-center">
               <div className="text-4xl mb-4">⏱️</div>
-              <h3 className="text-lg font-medium text-white mb-2">
+              <h3 className="text-lg font-medium text-slate-900 mb-2">
                 No time entries yet
               </h3>
               <p className="text-slate-500">
@@ -349,13 +370,13 @@ export default function TimeTrackingPage() {
             filteredEntries.map((entry) => (
               <div
                 key={entry.id}
-                className={`bg-[#111827] rounded-lg border p-4 flex items-center gap-4 ${
-                  entry.isBilled ? "border-slate-100 bg-slate-50" : "border-white/20"
+                className={`bg-white rounded-lg border p-4 flex items-center gap-4 ${
+                  entry.isBilled ? "border-slate-100 bg-slate-50" : "border-slate-200"
                 }`}
               >
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <span className="font-medium text-white truncate">
+                    <span className="font-medium text-slate-900 truncate">
                       {entry.description}
                     </span>
                     {entry.isBilled && (
@@ -372,7 +393,7 @@ export default function TimeTrackingPage() {
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="font-mono font-medium text-white">
+                  <div className="font-mono font-medium text-slate-900">
                     {formatDuration(entry.durationMinutes)}
                   </div>
                   <div className="text-sm text-slate-500">
