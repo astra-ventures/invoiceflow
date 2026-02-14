@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { AppNavbar } from "../_components/AppNavbar";
 import {
   getBusinessInfo,
   saveBusinessInfo,
@@ -435,64 +436,39 @@ ${fromName}`;
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Header */}
-      <header className="bg-white border-b border-slate-200">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold text-slate-900">
-            Invoice<span className="text-blue-600">Flow</span>
-          </Link>
-          <div className="flex items-center gap-4">
-            <Link
-              href="/history"
-              className="text-slate-600 hover:text-slate-900"
-            >
-              History
-            </Link>
-            <Link
-              href="/time"
-              className="text-slate-600 hover:text-slate-900"
-            >
-              Time
-            </Link>
-            <Link
-              href="/clients"
-              className="text-slate-600 hover:text-slate-900"
-            >
-              Clients
-            </Link>
-            <Link
-              href="/settings"
-              className="text-slate-600 hover:text-slate-900"
-            >
-              Settings
-            </Link>
-            <button
-              onClick={generateInvoice}
-              disabled={
-                loading ||
-                !fromName ||
-                !toName ||
-                items.every((i) => !i.description)
-              }
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? "Generating..." : "Preview Invoice →"}
-            </button>
+    <div className="min-h-screen bg-[#0A0F1E]">
+      <AppNavbar />
+      
+      <main className="max-w-4xl mx-auto px-6 pt-24 pb-8">
+        {/* Header with Generate Button */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-white">Create Invoice</h1>
+            <p className="text-[#9CA3AF] mt-1">Generate professional invoices in seconds</p>
           </div>
+          <button
+            onClick={generateInvoice}
+            disabled={
+              loading ||
+              !fromName ||
+              !toName ||
+              items.every((i) => !i.description)
+            }
+            className="bg-[#6366F1] text-white px-8 py-3 rounded-lg hover:bg-[#818CF8] transition disabled:opacity-50 disabled:cursor-not-allowed font-medium shadow-lg shadow-[#6366F1]/25"
+          >
+            {loading ? "Generating..." : "Preview Invoice →"}
+          </button>
         </div>
-      </header>
 
-      <main className="max-w-4xl mx-auto px-6 py-8">
         {/* Time Entries Banner */}
         {unbilledTime.length > 0 && (
-          <div className="bg-amber-50 border border-amber-100 rounded-xl p-4 mb-6 flex items-center justify-between">
+          <div className="bg-amber-950/20 border border-amber-800/20 rounded-xl p-4 mb-6 flex items-center justify-between">
             <div>
-              <div className="font-medium text-amber-900">
+              <div className="font-medium text-amber-200">
                 {unbilledTime.length} unbilled time{" "}
                 {unbilledTime.length === 1 ? "entry" : "entries"}
               </div>
-              <div className="text-sm text-amber-700">
+              <div className="text-sm text-amber-300">
                 Worth $
                 {unbilledTime
                   .reduce(
@@ -514,14 +490,14 @@ ${fromName}`;
         {/* Time Entries Modal */}
         {showTimeEntries && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl max-w-lg w-full max-h-[80vh] overflow-hidden">
-              <div className="p-4 border-b border-slate-200 flex items-center justify-between">
-                <h3 className="font-semibold text-slate-900">
+            <div className="bg-[#111827] border border-white/10 rounded-xl max-w-lg w-full max-h-[80vh] overflow-hidden">
+              <div className="p-4 border-b border-white/10 flex items-center justify-between">
+                <h3 className="font-semibold text-white">
                   Add Time Entries
                 </h3>
                 <button
                   onClick={() => setShowTimeEntries(false)}
-                  className="text-slate-400 hover:text-slate-600"
+                  className="text-[#9CA3AF] hover:text-white"
                 >
                   ×
                 </button>
@@ -530,19 +506,19 @@ ${fromName}`;
                 {unbilledTime.map((entry) => (
                   <label
                     key={entry.id}
-                    className="flex items-center gap-3 p-3 hover:bg-slate-50 rounded-lg cursor-pointer"
+                    className="flex items-center gap-3 p-3 hover:bg-white/5 rounded-lg cursor-pointer"
                   >
                     <input
                       type="checkbox"
                       checked={selectedTimeEntries.includes(entry.id)}
                       onChange={() => toggleTimeEntry(entry.id)}
-                      className="rounded border-slate-300"
+                      className="rounded border-white/20 bg-white/10"
                     />
                     <div className="flex-1">
-                      <div className="font-medium text-slate-900">
+                      <div className="font-medium text-white">
                         {entry.description}
                       </div>
-                      <div className="text-sm text-slate-500">
+                      <div className="text-sm text-[#9CA3AF]">
                         {entry.clientName} •{" "}
                         {formatDuration(entry.durationMinutes)} • $
                         {((entry.durationMinutes / 60) * entry.hourlyRate).toFixed(2)}
@@ -551,17 +527,17 @@ ${fromName}`;
                   </label>
                 ))}
               </div>
-              <div className="p-4 border-t border-slate-200 flex justify-end gap-3">
+              <div className="p-4 border-t border-white/10 flex justify-end gap-3">
                 <button
                   onClick={() => setShowTimeEntries(false)}
-                  className="px-4 py-2 text-slate-600 hover:text-slate-900"
+                  className="px-4 py-2 text-[#9CA3AF] hover:text-white"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={addTimeEntriesToInvoice}
                   disabled={selectedTimeEntries.length === 0}
-                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+                  className="bg-[#6366F1] text-white px-4 py-2 rounded-lg hover:bg-[#818CF8] transition disabled:opacity-50"
                 >
                   Add {selectedTimeEntries.length} Entries
                 </button>
@@ -572,26 +548,26 @@ ${fromName}`;
 
         <div className="grid md:grid-cols-2 gap-8">
           {/* From */}
-          <div className="bg-white p-6 rounded-xl border border-slate-200">
+          <div className="bg-[#111827] p-6 rounded-xl border border-white/10">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-semibold text-slate-900">
+              <h2 className="font-semibold text-white">
                 From (Your Details)
               </h2>
               {fromName && !businessInfoSaved && (
                 <button
                   onClick={handleSaveBusinessInfo}
-                  className="text-sm text-blue-600 hover:text-blue-700"
+                  className="text-sm text-[#6366F1] hover:text-[#818CF8]"
                 >
                   Save for next time
                 </button>
               )}
               {businessInfoSaved && (
-                <span className="text-sm text-green-600">✓ Saved</span>
+                <span className="text-sm text-green-400">✓ Saved</span>
               )}
             </div>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm text-slate-600 mb-1">
+                <label className="block text-sm text-[#9CA3AF] mb-1">
                   Business Name *
                 </label>
                 <input
@@ -602,11 +578,11 @@ ${fromName}`;
                     setBusinessInfoSaved(false);
                   }}
                   placeholder="Acme Corp"
-                  className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                  className="w-full px-4 py-2 rounded-lg border border-white/20 bg-white/5 text-white placeholder-[#9CA3AF] focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1] outline-none"
                 />
               </div>
               <div>
-                <label className="block text-sm text-slate-600 mb-1">
+                <label className="block text-sm text-[#9CA3AF] mb-1">
                   Email
                 </label>
                 <input
@@ -617,11 +593,11 @@ ${fromName}`;
                     setBusinessInfoSaved(false);
                   }}
                   placeholder="billing@acme.com"
-                  className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                  className="w-full px-4 py-2 rounded-lg border border-white/20 bg-white/5 text-white placeholder-[#9CA3AF] focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1] outline-none"
                 />
               </div>
               <div>
-                <label className="block text-sm text-slate-600 mb-1">
+                <label className="block text-sm text-[#9CA3AF] mb-1">
                   Address
                 </label>
                 <textarea
@@ -632,38 +608,38 @@ ${fromName}`;
                   }}
                   placeholder="123 Business St&#10;New York, NY 10001"
                   rows={2}
-                  className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none resize-none"
+                  className="w-full px-4 py-2 rounded-lg border border-white/20 bg-white/5 text-white placeholder-[#9CA3AF] focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1] outline-none resize-none"
                 />
               </div>
             </div>
           </div>
 
           {/* To */}
-          <div className="bg-white p-6 rounded-xl border border-slate-200">
+          <div className="bg-[#111827] p-6 rounded-xl border border-white/10">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-semibold text-slate-900">
+              <h2 className="font-semibold text-white">
                 To (Client Details)
               </h2>
               {clients.length > 0 && (
                 <div className="relative">
                   <button
                     onClick={() => setShowClientDropdown(!showClientDropdown)}
-                    className="text-sm text-blue-600 hover:text-blue-700"
+                    className="text-sm text-[#6366F1] hover:text-[#818CF8]"
                   >
                     Select saved client ▾
                   </button>
                   {showClientDropdown && (
-                    <div className="absolute right-0 top-8 bg-white border border-slate-200 rounded-lg shadow-lg py-2 min-w-48 z-10">
+                    <div className="absolute right-0 top-8 bg-[#111827] border border-white/10 rounded-lg shadow-lg py-2 min-w-48 z-10">
                       {clients.map((client) => (
                         <button
                           key={client.id}
                           onClick={() => handleSelectClient(client)}
-                          className="block w-full text-left px-4 py-2 hover:bg-slate-50 text-sm"
+                          className="block w-full text-left px-4 py-2 hover:bg-white/5 text-sm"
                         >
-                          <div className="font-medium text-slate-900">
+                          <div className="font-medium text-white">
                             {client.name}
                           </div>
-                          <div className="text-slate-500 text-xs">
+                          <div className="text-[#9CA3AF] text-xs">
                             {client.email}
                           </div>
                         </button>
