@@ -11,9 +11,9 @@ export function Footer() {
           <span className="text-sm text-[#6B7280]">© 2026 Astra Ventures</span>
         </div>
         <div className="flex gap-6 text-sm text-[#6B7280]">
-          <Link href="#" className="transition-colors hover:text-[#9CA3AF]">Privacy</Link>
-          <Link href="#" className="transition-colors hover:text-[#9CA3AF]">Terms</Link>
-          <Link href="#" className="transition-colors hover:text-[#9CA3AF]">API</Link>
+          <Link href="/privacy" className="transition-colors hover:text-[#9CA3AF]">Privacy</Link>
+          <Link href="/terms" className="transition-colors hover:text-[#9CA3AF]">Terms</Link>
+          <Link href="/api-docs" className="transition-colors hover:text-[#9CA3AF]">API</Link>
         </div>
       </div>
     </footer>

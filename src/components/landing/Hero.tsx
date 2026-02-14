@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, Zap } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 export function Hero() {
   return (
@@ -13,25 +13,12 @@ export function Hero() {
       </div>
 
       <div className="relative mx-auto max-w-6xl px-6">
-        {/* Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="flex justify-center"
-        >
-          <div className="inline-flex items-center gap-2 rounded-full border border-[#6366F1]/30 bg-[#6366F1]/10 px-4 py-1.5 text-sm text-[#A5B4FC]">
-            <Zap size={14} className="text-[#F59E0B]" />
-            100% Free — No signup required
-          </div>
-        </motion.div>
-
         {/* Heading */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="mx-auto mt-8 max-w-4xl text-center text-4xl font-bold leading-[1.1] tracking-tight text-white sm:text-6xl lg:text-7xl"
+          transition={{ duration: 0.5 }}
+          className="mx-auto max-w-4xl text-center text-4xl font-bold leading-[1.1] tracking-tight text-white sm:text-6xl lg:text-7xl"
         >
           Professional invoices{" "}
           <span className="bg-gradient-to-r from-[#6366F1] to-[#A78BFA] bg-clip-text text-transparent">
@@ -43,7 +30,7 @@ export function Hero() {
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
           className="mx-auto mt-6 max-w-2xl text-center text-lg leading-relaxed text-[#9CA3AF]"
         >
           Create, download, and send beautiful invoices instantly. Track time, manage clients, and get paid faster — all without creating an account.
@@ -53,7 +40,7 @@ export function Hero() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
           className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
         >
           <Link
@@ -75,7 +62,7 @@ export function Hero() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
           className="mx-auto mt-16 grid max-w-2xl grid-cols-3 gap-8 border-t border-white/5 pt-10"
         >
           {[
