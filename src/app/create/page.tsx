@@ -391,18 +391,18 @@ ${fromName}`;
   if (previewHtml) {
     return (
       <div className="min-h-screen bg-slate-100">
-        <div className="bg-white border-b border-slate-200 sticky top-0 z-10">
+        <div className="bg-[#111827] border-b border-white/10 sticky top-0 z-10">
           <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
             <button
               onClick={() => setPreviewHtml(null)}
-              className="text-slate-600 hover:text-slate-900 flex items-center gap-2"
+              className="text-[#9CA3AF] hover:text-white flex items-center gap-2"
             >
               ← Back to Editor
             </button>
             <div className="flex items-center gap-2 flex-wrap">
               <button
                 onClick={copyPaymentReminder}
-                className="text-slate-600 hover:text-slate-900 px-3 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 transition text-sm"
+                className="text-[#9CA3AF] hover:text-white px-3 py-2 rounded-lg border border-white/10 hover:bg-[#0A0F1E] transition text-sm"
               >
                 📋 Copy Reminder
               </button>
@@ -426,7 +426,7 @@ ${fromName}`;
               </button>
               <button
                 onClick={downloadPdf}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition flex items-center gap-2 text-sm"
+                className="bg-[#6366F1] text-white px-4 py-2 rounded-lg hover:bg-[#818CF8] transition flex items-center gap-2 text-sm"
               >
                 🖨️ Print / PDF
               </button>
@@ -435,7 +435,7 @@ ${fromName}`;
         </div>
         <div className="max-w-4xl mx-auto py-8 px-4">
           <div
-            className="bg-white shadow-xl rounded-lg overflow-hidden"
+            className="bg-[#111827] shadow-xl rounded-lg overflow-hidden"
             dangerouslySetInnerHTML={{ __html: previewHtml }}
           />
         </div>
@@ -466,13 +466,13 @@ ${fromName}`;
       <main className="max-w-4xl mx-auto px-6 py-8 pt-24">
         {/* Time Entries Banner */}
         {unbilledTime.length > 0 && (
-          <div className="bg-amber-50 border border-amber-100 rounded-xl p-4 mb-6 flex items-center justify-between">
+          <div className="bg-[#F59E0B]/10 border border-[#F59E0B]/20 rounded-xl p-4 mb-6 flex items-center justify-between">
             <div>
-              <div className="font-medium text-amber-900">
+              <div className="font-medium text-[#F59E0B]">
                 {unbilledTime.length} unbilled time{" "}
                 {unbilledTime.length === 1 ? "entry" : "entries"}
               </div>
-              <div className="text-sm text-amber-700">
+              <div className="text-sm text-[#F59E0B]/80">
                 Worth $
                 {unbilledTime
                   .reduce(
@@ -484,7 +484,7 @@ ${fromName}`;
             </div>
             <button
               onClick={() => setShowTimeEntries(true)}
-              className="bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 transition text-sm"
+              className="bg-[#F59E0B] text-white px-4 py-2 rounded-lg hover:bg-[#F59E0B]/80 transition text-sm"
             >
               Add to Invoice →
             </button>
@@ -494,14 +494,14 @@ ${fromName}`;
         {/* Time Entries Modal */}
         {showTimeEntries && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl max-w-lg w-full max-h-[80vh] overflow-hidden">
-              <div className="p-4 border-b border-slate-200 flex items-center justify-between">
-                <h3 className="font-semibold text-slate-900">
+            <div className="bg-[#111827] rounded-xl max-w-lg w-full max-h-[80vh] overflow-hidden">
+              <div className="p-4 border-b border-white/10 flex items-center justify-between">
+                <h3 className="font-semibold text-white">
                   Add Time Entries
                 </h3>
                 <button
                   onClick={() => setShowTimeEntries(false)}
-                  className="text-slate-400 hover:text-slate-600"
+                  className="text-slate-400 hover:text-[#9CA3AF]"
                 >
                   ×
                 </button>
@@ -510,7 +510,7 @@ ${fromName}`;
                 {unbilledTime.map((entry) => (
                   <label
                     key={entry.id}
-                    className="flex items-center gap-3 p-3 hover:bg-slate-50 rounded-lg cursor-pointer"
+                    className="flex items-center gap-3 p-3 hover:bg-[#0A0F1E] rounded-lg cursor-pointer"
                   >
                     <input
                       type="checkbox"
@@ -519,7 +519,7 @@ ${fromName}`;
                       className="rounded border-slate-300"
                     />
                     <div className="flex-1">
-                      <div className="font-medium text-slate-900">
+                      <div className="font-medium text-white">
                         {entry.description}
                       </div>
                       <div className="text-sm text-slate-500">
@@ -531,17 +531,17 @@ ${fromName}`;
                   </label>
                 ))}
               </div>
-              <div className="p-4 border-t border-slate-200 flex justify-end gap-3">
+              <div className="p-4 border-t border-white/10 flex justify-end gap-3">
                 <button
                   onClick={() => setShowTimeEntries(false)}
-                  className="px-4 py-2 text-slate-600 hover:text-slate-900"
+                  className="px-4 py-2 text-[#9CA3AF] hover:text-white"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={addTimeEntriesToInvoice}
                   disabled={selectedTimeEntries.length === 0}
-                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+                  className="bg-[#6366F1] text-white px-4 py-2 rounded-lg hover:bg-[#818CF8] transition disabled:opacity-50"
                 >
                   Add {selectedTimeEntries.length} Entries
                 </button>
@@ -552,9 +552,9 @@ ${fromName}`;
 
         <div className="grid md:grid-cols-2 gap-8">
           {/* From */}
-          <div className="bg-white p-6 rounded-xl border border-slate-200">
+          <div className="bg-[#111827] p-6 rounded-xl border border-white/10">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-semibold text-slate-900">
+              <h2 className="font-semibold text-white">
                 From (Your Details)
               </h2>
               {fromName && !businessInfoSaved && (
@@ -571,7 +571,7 @@ ${fromName}`;
             </div>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm text-slate-600 mb-1">
+                <label className="block text-sm text-[#9CA3AF] mb-1">
                   Business Name *
                 </label>
                 <input
@@ -582,11 +582,11 @@ ${fromName}`;
                     setBusinessInfoSaved(false);
                   }}
                   placeholder="Acme Corp"
-                  className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-[#1F2937] border border-white/20 text-white placeholder-[#6B7280] focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1] outline-none"
                 />
               </div>
               <div>
-                <label className="block text-sm text-slate-600 mb-1">
+                <label className="block text-sm text-[#9CA3AF] mb-1">
                   Email
                 </label>
                 <input
@@ -597,11 +597,11 @@ ${fromName}`;
                     setBusinessInfoSaved(false);
                   }}
                   placeholder="billing@acme.com"
-                  className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-[#1F2937] border border-white/20 text-white placeholder-[#6B7280] focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1] outline-none"
                 />
               </div>
               <div>
-                <label className="block text-sm text-slate-600 mb-1">
+                <label className="block text-sm text-[#9CA3AF] mb-1">
                   Address
                 </label>
                 <textarea
@@ -612,16 +612,16 @@ ${fromName}`;
                   }}
                   placeholder="123 Business St&#10;New York, NY 10001"
                   rows={2}
-                  className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none resize-none"
+                  className="w-full px-4 py-2 rounded-lg bg-[#1F2937] border border-white/20 text-white placeholder-[#6B7280] focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1] outline-none resize-none"
                 />
               </div>
             </div>
           </div>
 
           {/* To */}
-          <div className="bg-white p-6 rounded-xl border border-slate-200">
+          <div className="bg-[#111827] p-6 rounded-xl border border-white/10">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-semibold text-slate-900">
+              <h2 className="font-semibold text-white">
                 To (Client Details)
               </h2>
               {clients.length > 0 && (
@@ -633,14 +633,14 @@ ${fromName}`;
                     Select saved client ▾
                   </button>
                   {showClientDropdown && (
-                    <div className="absolute right-0 top-8 bg-white border border-slate-200 rounded-lg shadow-lg py-2 min-w-48 z-10">
+                    <div className="absolute right-0 top-8 bg-[#111827] border border-white/10 rounded-lg shadow-lg py-2 min-w-48 z-10">
                       {clients.map((client) => (
                         <button
                           key={client.id}
                           onClick={() => handleSelectClient(client)}
-                          className="block w-full text-left px-4 py-2 hover:bg-slate-50 text-sm"
+                          className="block w-full text-left px-4 py-2 hover:bg-[#0A0F1E] text-sm"
                         >
-                          <div className="font-medium text-slate-900">
+                          <div className="font-medium text-white">
                             {client.name}
                           </div>
                           <div className="text-slate-500 text-xs">
@@ -655,7 +655,7 @@ ${fromName}`;
             </div>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm text-slate-600 mb-1">
+                <label className="block text-sm text-[#9CA3AF] mb-1">
                   Client Name *
                 </label>
                 <input
@@ -663,12 +663,12 @@ ${fromName}`;
                   value={toName}
                   onChange={(e) => setToName(e.target.value)}
                   placeholder="Client Inc"
-                  className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-[#1F2937] border border-white/20 text-white placeholder-[#6B7280] focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1] outline-none"
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm text-slate-600 mb-1">
+                  <label className="block text-sm text-[#9CA3AF] mb-1">
                     Email
                   </label>
                   <input
@@ -676,11 +676,11 @@ ${fromName}`;
                     value={toEmail}
                     onChange={(e) => setToEmail(e.target.value)}
                     placeholder="accounts@client.com"
-                    className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                    className="w-full px-4 py-2 rounded-lg bg-[#1F2937] border border-white/20 text-white placeholder-[#6B7280] focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1] outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm text-slate-600 mb-1">
+                  <label className="block text-sm text-[#9CA3AF] mb-1">
                     Phone
                   </label>
                   <input
@@ -688,12 +688,12 @@ ${fromName}`;
                     value={toPhone}
                     onChange={(e) => setToPhone(e.target.value)}
                     placeholder="+1 555 123 4567"
-                    className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                    className="w-full px-4 py-2 rounded-lg bg-[#1F2937] border border-white/20 text-white placeholder-[#6B7280] focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1] outline-none"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-sm text-slate-600 mb-1">
+                <label className="block text-sm text-[#9CA3AF] mb-1">
                   Address
                 </label>
                 <textarea
@@ -701,10 +701,10 @@ ${fromName}`;
                   onChange={(e) => setToAddress(e.target.value)}
                   placeholder="456 Client Ave&#10;Los Angeles, CA 90001"
                   rows={2}
-                  className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none resize-none"
+                  className="w-full px-4 py-2 rounded-lg bg-[#1F2937] border border-white/20 text-white placeholder-[#6B7280] focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1] outline-none resize-none"
                 />
               </div>
-              <label className="flex items-center gap-2 text-sm text-slate-600">
+              <label className="flex items-center gap-2 text-sm text-[#9CA3AF]">
                 <input
                   type="checkbox"
                   checked={saveClientChecked}
@@ -718,25 +718,25 @@ ${fromName}`;
         </div>
 
         {/* Invoice Details */}
-        <div className="mt-8 bg-white p-6 rounded-xl border border-slate-200">
+        <div className="mt-8 bg-[#111827] p-6 rounded-xl border border-white/10">
           <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
-            <h2 className="font-semibold text-slate-900">Invoice Details</h2>
+            <h2 className="font-semibold text-white">Invoice Details</h2>
             <div className="flex flex-wrap items-center gap-4">
               <div>
-                <label className="text-sm text-slate-600 mr-2">Invoice #</label>
+                <label className="text-sm text-[#9CA3AF] mr-2">Invoice #</label>
                 <input
                   type="text"
                   value={invoiceNumber}
                   onChange={(e) => setInvoiceNumber(e.target.value)}
-                  className="px-3 py-1 rounded border border-slate-200 w-36"
+                  className="px-3 py-1 rounded border border-white/10 w-36"
                 />
               </div>
               <div>
-                <label className="text-sm text-slate-600 mr-2">Currency</label>
+                <label className="text-sm text-[#9CA3AF] mr-2">Currency</label>
                 <select
                   value={currency}
                   onChange={(e) => setCurrency(e.target.value)}
-                  className="px-3 py-1 rounded border border-slate-200"
+                  className="px-3 py-1 rounded border border-white/10"
                 >
                   <option value="USD">USD ($)</option>
                   <option value="EUR">EUR (€)</option>
@@ -749,15 +749,15 @@ ${fromName}`;
           </div>
 
           {/* Payment Terms Row */}
-          <div className="flex flex-wrap items-center gap-4 mb-6 p-4 bg-slate-50 rounded-lg">
+          <div className="flex flex-wrap items-center gap-4 mb-6 p-4 bg-[#0A0F1E] rounded-lg">
             <div>
-              <label className="text-sm text-slate-600 mr-2">
+              <label className="text-sm text-[#9CA3AF] mr-2">
                 Payment Terms
               </label>
               <select
                 value={paymentTerms}
                 onChange={(e) => setPaymentTerms(e.target.value)}
-                className="px-3 py-1 rounded border border-slate-200"
+                className="px-3 py-1 rounded border border-white/10"
               >
                 <option value="due_on_receipt">Due on Receipt</option>
                 <option value="net_15">Net 15</option>
@@ -766,16 +766,16 @@ ${fromName}`;
               </select>
             </div>
             <div>
-              <label className="text-sm text-slate-600 mr-2">Due Date</label>
+              <label className="text-sm text-[#9CA3AF] mr-2">Due Date</label>
               <input
                 type="date"
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
-                className="px-3 py-1 rounded border border-slate-200"
+                className="px-3 py-1 rounded border border-white/10"
               />
             </div>
             <div className="flex items-center gap-2">
-              <label className="flex items-center gap-2 text-sm text-slate-600">
+              <label className="flex items-center gap-2 text-sm text-[#9CA3AF]">
                 <input
                   type="checkbox"
                   checked={includeLateFee}
@@ -795,7 +795,7 @@ ${fromName}`;
                     min="0"
                     max="10"
                     step="0.5"
-                    className="w-16 px-2 py-1 rounded border border-slate-200 text-sm"
+                    className="w-16 px-2 py-1 rounded border border-white/10 text-sm"
                   />
                   <span className="text-sm text-slate-500">%/mo</span>
                 </div>
@@ -870,7 +870,7 @@ ${fromName}`;
                   </Link>
                   <button
                     type="button"
-                    className="px-6 py-3 border border-white/20 text-white rounded-lg font-semibold hover:bg-white/5 transition-colors"
+                    className="px-6 py-3 border border-white/20 text-white rounded-lg font-semibold hover:bg-[#111827]/5 transition-colors"
                     onClick={() => alert('Demo: This would show a preview of how Stripe payment links appear on invoices')}
                   >
                     See Demo
@@ -882,7 +882,7 @@ ${fromName}`;
 
           {/* Line Items */}
           <div className="mt-4">
-            <div className="grid grid-cols-12 gap-4 text-sm text-slate-600 mb-2">
+            <div className="grid grid-cols-12 gap-4 text-sm text-[#9CA3AF] mb-2">
               <div className="col-span-6">Description</div>
               <div className="col-span-2 text-right">Qty</div>
               <div className="col-span-2 text-right">Unit Price</div>
@@ -902,7 +902,7 @@ ${fromName}`;
                       updateItem(item.id, "description", e.target.value)
                     }
                     placeholder="Web Development"
-                    className="w-full px-3 py-2 rounded border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                    className="w-full px-3 py-2 rounded bg-[#1F2937] border border-white/20 text-white placeholder-[#6B7280] focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1] outline-none"
                   />
                 </div>
                 <div className="col-span-2">
@@ -918,7 +918,7 @@ ${fromName}`;
                     }
                     min="0"
                     step="0.5"
-                    className="w-full px-3 py-2 rounded border border-slate-200 text-right focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                    className="w-full px-3 py-2 rounded border border-white/10 text-right focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
                   />
                 </div>
                 <div className="col-span-2">
@@ -934,11 +934,11 @@ ${fromName}`;
                     }
                     min="0"
                     step="0.01"
-                    className="w-full px-3 py-2 rounded border border-slate-200 text-right focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                    className="w-full px-3 py-2 rounded border border-white/10 text-right focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
                   />
                 </div>
                 <div className="col-span-2 flex items-center justify-end gap-2">
-                  <span className="text-slate-900">
+                  <span className="text-white">
                     {formatCurrency(item.quantity * item.unitPrice)}
                   </span>
                   {items.length > 1 && (
@@ -964,11 +964,11 @@ ${fromName}`;
           {/* Totals */}
           <div className="mt-8 flex justify-end">
             <div className="w-64 space-y-3">
-              <div className="flex justify-between text-slate-600">
+              <div className="flex justify-between text-[#9CA3AF]">
                 <span>Subtotal</span>
                 <span>{formatCurrency(subtotal)}</span>
               </div>
-              <div className="flex justify-between items-center text-slate-600">
+              <div className="flex justify-between items-center text-[#9CA3AF]">
                 <div className="flex items-center gap-2">
                   <span>Tax</span>
                   <input
@@ -980,13 +980,13 @@ ${fromName}`;
                     min="0"
                     max="100"
                     step="0.5"
-                    className="w-16 px-2 py-1 rounded border border-slate-200 text-right text-sm"
+                    className="w-16 px-2 py-1 rounded border border-white/10 text-right text-sm"
                   />
                   <span className="text-sm">%</span>
                 </div>
                 <span>{formatCurrency(tax)}</span>
               </div>
-              <div className="flex justify-between text-lg font-semibold text-slate-900 pt-3 border-t border-slate-200">
+              <div className="flex justify-between text-lg font-semibold text-white pt-3 border-t border-white/10">
                 <span>Total</span>
                 <span>{formatCurrency(total)}</span>
               </div>
@@ -995,10 +995,10 @@ ${fromName}`;
         </div>
 
         {/* Notes */}
-        <div className="mt-8 bg-white p-6 rounded-xl border border-slate-200">
+        <div className="mt-8 bg-[#111827] p-6 rounded-xl border border-white/10">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-semibold text-slate-900">Notes & Terms</h2>
-            <label className="flex items-center gap-2 text-sm text-slate-600">
+            <h2 className="font-semibold text-white">Notes & Terms</h2>
+            <label className="flex items-center gap-2 text-sm text-[#9CA3AF]">
               <input
                 type="checkbox"
                 checked={includeContractTerms}
@@ -1013,7 +1013,7 @@ ${fromName}`;
             onChange={(e) => setNotes(e.target.value)}
             placeholder="Additional notes (payment terms and late fee clause will be auto-added)..."
             rows={3}
-            className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none resize-none"
+            className="w-full px-4 py-2 rounded-lg bg-[#1F2937] border border-white/20 text-white placeholder-[#6B7280] focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1] outline-none resize-none"
           />
           <p className="mt-2 text-xs text-slate-500">
             Payment terms ({paymentTerms.replace("_", " ")})
@@ -1034,7 +1034,7 @@ ${fromName}`;
               !toName ||
               items.every((i) => !i.description)
             }
-            className="bg-blue-600 text-white px-12 py-4 rounded-xl text-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-600/25"
+            className="bg-[#6366F1] text-white px-12 py-4 rounded-xl text-lg font-semibold hover:bg-[#818CF8] transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-600/25"
           >
             {loading ? "Generating..." : "Generate Invoice →"}
           </button>
