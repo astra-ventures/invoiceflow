@@ -38,7 +38,7 @@ export default function ClientsPage() {
 
         {clients.length === 0 ? (
           <div className="bg-[#111827] rounded-xl border border-white/10 p-12 text-center">
-            <div className="text-4xl mb-4">👥</div>
+            
             <h2 className="text-xl font-semibold text-white mb-2">
               No saved clients
             </h2>
@@ -71,20 +71,20 @@ export default function ClientsPage() {
                       {client.address}
                     </p>
                   )}
-                  <p className="text-slate-400 text-xs mt-3">
+                  <p className="text-[#9CA3AF] text-xs mt-3">
                     Added {formatDate(client.createdAt)}
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
                   <Link
                     href={`/create?client=${client.id}`}
-                    className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+                    className="text-[#6366F1] hover:text-[#818CF8] text-sm font-medium"
                   >
                     New Invoice
                   </Link>
                   <button
                     onClick={() => handleDelete(client.id)}
-                    className="text-red-500 hover:text-red-700 text-sm"
+                    className="text-[#F43F5E] hover:text-[#FB7185] text-sm"
                   >
                     Delete
                   </button>

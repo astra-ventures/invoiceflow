@@ -60,7 +60,7 @@ export default function InvoiceHistory() {
   };
 
   const statusColors: Record<string, string> = {
-    draft: "bg-slate-100 text-slate-700",
+    draft: "bg-[#1F2937] text-[#9CA3AF]",
     sent: "bg-blue-100 text-blue-700",
     viewed: "bg-purple-100 text-purple-700",
     paid: "bg-green-100 text-green-700",
@@ -138,7 +138,7 @@ export default function InvoiceHistory() {
 
         {filteredInvoices.length === 0 ? (
           <div className="bg-[#111827] rounded-xl border border-white/10 p-12 text-center">
-            <div className="text-4xl mb-4">📄</div>
+            
             <h2 className="text-xl font-semibold text-white mb-2">
               {filter === "all" ? "No invoices yet" : `No ${filter} invoices`}
             </h2>
@@ -215,7 +215,7 @@ export default function InvoiceHistory() {
                               {formatDate(invoice.dueDate)}
                             </span>
                             {isOverdue && (
-                              <div className="text-xs text-red-500">
+                              <div className="text-xs text-[#F43F5E]">
                                 {Math.abs(daysUntilDue!)} days overdue
                               </div>
                             )}
@@ -231,7 +231,7 @@ export default function InvoiceHistory() {
                             )}
                           </div>
                         ) : (
-                          <span className="text-slate-400">—</span>
+                          <span className="text-[#9CA3AF]">—</span>
                         )}
                       </td>
                       <td className="px-6 py-4 text-right">
@@ -239,7 +239,7 @@ export default function InvoiceHistory() {
                           {formatCurrency(invoice.total, invoice.currency)}
                         </div>
                         {lateFeeInfo && lateFeeInfo.fee > 0 && (
-                          <div className="text-xs text-red-500">
+                          <div className="text-xs text-[#F43F5E]">
                             +{formatCurrency(lateFeeInfo.fee, invoice.currency)} late fee
                           </div>
                         )}
