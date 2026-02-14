@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { Crown, Lock, Zap } from "lucide-react";
+import { hasProAccess } from "@/lib/stripe";
+import { AppNavbar } from "@/app/_components/AppNavbar";
 import {
   getRecurringInvoices,
   saveRecurringInvoice,
@@ -14,6 +17,7 @@ import {
 } from "@/lib/storage";
 
 export default function RecurringPage() {
+  const [isPro, setIsPro] = useState(false);
   const [recurring, setRecurring] = useState<RecurringInvoice[]>([]);
   const [clients, setClients] = useState<Client[]>([]);
   const [showForm, setShowForm] = useState(false);
@@ -36,8 +40,11 @@ export default function RecurringPage() {
   });
 
   useEffect(() => {
-    setRecurring(getRecurringInvoices());
-    setClients(getClients());
+    setIsPro(hasProAccess());
+    if (hasProAccess()) {
+      setRecurring(getRecurringInvoices());
+      setClients(getClients());
+    }
   }, []);
 
   const resetForm = () => {
@@ -198,8 +205,68 @@ export default function RecurringPage() {
     AUD: "A$",
   };
 
+  // Pro Gate - Show upgrade prompt if not Pro
+  if (!isPro) {
+    return (
+      <div className="min-h-screen bg-[#0A0F1E]">
+        <AppNavbar />
+        
+        <div className="pt-24 pb-20 px-6">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="w-20 h-20 bg-[#6366F1]/20 text-[#6366F1] rounded-full flex items-center justify-center mx-auto mb-8">
+              <Crown className="w-10 h-10" />
+            </div>
+            
+            <h1 className="text-4xl font-bold text-white mb-4">
+              Recurring Invoice Automation
+            </h1>
+            <p className="text-xl text-[#9CA3AF] mb-8 max-w-2xl mx-auto">
+              Set up automated recurring invoices and never manually send the same invoice twice. 
+              Perfect for subscriptions, retainers, and ongoing services.
+            </p>
+
+            <div className="grid md:grid-cols-3 gap-6 mb-12">
+              <div className="bg-[#111827] border border-white/10 rounded-xl p-6">
+                <div className="w-12 h-12 bg-[#6366F1]/20 text-[#6366F1] rounded-lg flex items-center justify-center mb-4">
+                  <Zap className="w-6 h-6" />
+                </div>
+                <h3 className="text-lg font-semibold text-white mb-2">Auto-Generated</h3>
+                <p className="text-sm text-[#9CA3AF]">Invoices created automatically based on your schedule</p>
+              </div>
+              
+              <div className="bg-[#111827] border border-white/10 rounded-xl p-6">
+                <div className="w-12 h-12 bg-[#10B981]/20 text-[#10B981] rounded-lg flex items-center justify-center mb-4">
+                  <Crown className="w-6 h-6" />
+                </div>
+                <h3 className="text-lg font-semibold text-white mb-2">Client Templates</h3>
+                <p className="text-sm text-[#9CA3AF]">Save recurring templates for each client</p>
+              </div>
+              
+              <div className="bg-[#111827] border border-white/10 rounded-xl p-6">
+                <div className="w-12 h-12 bg-[#F59E0B]/20 text-[#F59E0B] rounded-lg flex items-center justify-center mb-4">
+                  <Lock className="w-6 h-6" />
+                </div>
+                <h3 className="text-lg font-semibold text-white mb-2">Smart Reminders</h3>
+                <p className="text-sm text-[#9CA3AF]">Automatic email reminders with payment links</p>
+              </div>
+            </div>
+
+            <Link
+              href="/upgrade"
+              className="inline-flex items-center gap-2 bg-[#6366F1] text-white px-8 py-4 rounded-lg font-semibold hover:bg-[#818CF8] hover:shadow-lg hover:shadow-[#6366F1]/25 transition-all"
+            >
+              <Crown className="w-5 h-5" />
+              Upgrade to Pro ($12/month)
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[#0A0F1E]">
+      <AppNavbar />
       {/* Header */}
       <header className="bg-white border-b border-slate-200">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
