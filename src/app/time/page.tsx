@@ -179,7 +179,7 @@ export default function TimeTrackingPage() {
             <div className="flex-shrink-0 text-center md:text-left">
               <div
                 className={`text-5xl font-mono font-bold ${
-                  isTracking ? "text-green-600" : "text-slate-300"
+                  isTracking ? "text-[#10B981]" : "text-[#4B5563]"
                 }`}
               >
                 {formatTime(elapsedSeconds)}
@@ -304,7 +304,7 @@ export default function TimeTrackingPage() {
 
         {/* Filters */}
         <div className="flex flex-wrap items-center gap-4 mb-4">
-          <div className="flex bg-slate-100 rounded-lg p-1">
+          <div className="flex bg-[#1F2937] rounded-lg p-1">
             {(["all", "unbilled", "billed"] as const).map((f) => (
               <button
                 key={f}
@@ -337,7 +337,7 @@ export default function TimeTrackingPage() {
         <div className="space-y-2">
           {filteredEntries.length === 0 ? (
             <div className="bg-[#111827] rounded-xl border border-white/10 p-12 text-center">
-              <div className="text-4xl mb-4">⏱️</div>
+              
               <h3 className="text-lg font-medium text-white mb-2">
                 No time entries yet
               </h3>
@@ -350,7 +350,7 @@ export default function TimeTrackingPage() {
               <div
                 key={entry.id}
                 className={`bg-[#111827] rounded-lg border p-4 flex items-center gap-4 ${
-                  entry.isBilled ? "border-slate-100 bg-[#0A0F1E]" : "border-white/10"
+                  entry.isBilled ? "border-[#1F2937] bg-[#0A0F1E]" : "border-white/10"
                 }`}
               >
                 <div className="flex-1 min-w-0">
@@ -382,8 +382,8 @@ export default function TimeTrackingPage() {
                 <div className="flex items-center gap-1">
                   <button
                     onClick={() => toggleBilled(entry.id)}
-                    className={`p-2 rounded hover:bg-slate-100 transition ${
-                      entry.isBilled ? "text-green-600" : "text-slate-400"
+                    className={`p-2 rounded hover:bg-[#1F2937] transition ${
+                      entry.isBilled ? "text-[#10B981]" : "text-[#9CA3AF]"
                     }`}
                     title={entry.isBilled ? "Mark unbilled" : "Mark billed"}
                   >
@@ -391,7 +391,7 @@ export default function TimeTrackingPage() {
                   </button>
                   <button
                     onClick={() => handleDelete(entry.id)}
-                    className="p-2 rounded text-slate-400 hover:text-red-600 hover:bg-red-50 transition"
+                    className="p-2 rounded text-[#9CA3AF] hover:text-[#F43F5E] hover:bg-[#F43F5E]/10 transition"
                   >
                     ×
                   </button>

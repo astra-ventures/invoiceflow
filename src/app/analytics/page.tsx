@@ -102,7 +102,7 @@ export default function AnalyticsPage() {
                 : 0}
               <span className="text-lg font-normal text-[#9CA3AF]">%</span>
             </div>
-            <div className="mt-4 h-2 bg-slate-100 rounded-full overflow-hidden">
+            <div className="mt-4 h-2 bg-[#1F2937] rounded-full overflow-hidden">
               <div
                 className="h-full bg-green-500 rounded-full"
                 style={{
@@ -174,14 +174,14 @@ export default function AnalyticsPage() {
               <div className="space-y-3">
                 {analytics.topClients.map((client, idx) => (
                   <div key={client.name} className="flex items-center gap-3">
-                    <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-xs font-medium text-[#9CA3AF]">
+                    <div className="w-6 h-6 rounded-full bg-[#1F2937] flex items-center justify-center text-xs font-medium text-[#9CA3AF]">
                       {idx + 1}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="font-medium text-white truncate">
                         {client.name}
                       </div>
-                      <div className="h-2 bg-slate-100 rounded-full overflow-hidden mt-1">
+                      <div className="h-2 bg-[#1F2937] rounded-full overflow-hidden mt-1">
                         <div
                           className="h-full bg-blue-500 rounded-full"
                           style={{

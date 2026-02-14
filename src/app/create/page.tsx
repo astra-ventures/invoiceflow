@@ -390,7 +390,7 @@ ${fromName}`;
 
   if (previewHtml) {
     return (
-      <div className="min-h-screen bg-slate-100">
+      <div className="min-h-screen bg-[#0A0F1E]">
         <div className="bg-[#111827] border-b border-white/10 sticky top-0 z-10">
           <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
             <button
@@ -414,7 +414,7 @@ ${fromName}`;
               </button>
               <button
                 onClick={shareSMS}
-                className="text-blue-600 hover:text-blue-700 px-3 py-2 rounded-lg border border-blue-200 hover:bg-blue-50 transition text-sm"
+                className="text-[#6366F1] hover:text-[#818CF8] px-3 py-2 rounded-lg border border-[#6366F1]/30 hover:bg-[#6366F1]/10 transition text-sm"
               >
                 📱 SMS
               </button>
@@ -501,7 +501,7 @@ ${fromName}`;
                 </h3>
                 <button
                   onClick={() => setShowTimeEntries(false)}
-                  className="text-slate-400 hover:text-[#9CA3AF]"
+                  className="text-[#9CA3AF] hover:text-white"
                 >
                   ×
                 </button>
@@ -516,13 +516,13 @@ ${fromName}`;
                       type="checkbox"
                       checked={selectedTimeEntries.includes(entry.id)}
                       onChange={() => toggleTimeEntry(entry.id)}
-                      className="rounded border-slate-300"
+                      className="rounded border-white/20"
                     />
                     <div className="flex-1">
                       <div className="font-medium text-white">
                         {entry.description}
                       </div>
-                      <div className="text-sm text-slate-500">
+                      <div className="text-sm text-[#9CA3AF]">
                         {entry.clientName} •{" "}
                         {formatDuration(entry.durationMinutes)} • $
                         {((entry.durationMinutes / 60) * entry.hourlyRate).toFixed(2)}
@@ -560,7 +560,7 @@ ${fromName}`;
               {fromName && !businessInfoSaved && (
                 <button
                   onClick={handleSaveBusinessInfo}
-                  className="text-sm text-blue-600 hover:text-blue-700"
+                  className="text-sm text-[#6366F1] hover:text-[#818CF8]"
                 >
                   Save for next time
                 </button>
@@ -628,7 +628,7 @@ ${fromName}`;
                 <div className="relative">
                   <button
                     onClick={() => setShowClientDropdown(!showClientDropdown)}
-                    className="text-sm text-blue-600 hover:text-blue-700"
+                    className="text-sm text-[#6366F1] hover:text-[#818CF8]"
                   >
                     Select saved client ▾
                   </button>
@@ -643,7 +643,7 @@ ${fromName}`;
                           <div className="font-medium text-white">
                             {client.name}
                           </div>
-                          <div className="text-slate-500 text-xs">
+                          <div className="text-[#9CA3AF] text-xs">
                             {client.email}
                           </div>
                         </button>
@@ -709,7 +709,7 @@ ${fromName}`;
                   type="checkbox"
                   checked={saveClientChecked}
                   onChange={(e) => setSaveClientChecked(e.target.checked)}
-                  className="rounded border-slate-300"
+                  className="rounded border-white/20"
                 />
                 Save client for future invoices
               </label>
@@ -780,7 +780,7 @@ ${fromName}`;
                   type="checkbox"
                   checked={includeLateFee}
                   onChange={(e) => setIncludeLateFee(e.target.checked)}
-                  className="rounded border-slate-300"
+                  className="rounded border-white/20"
                 />
                 Late fee
               </label>
@@ -797,7 +797,7 @@ ${fromName}`;
                     step="0.5"
                     className="w-16 px-2 py-1 rounded border border-white/10 text-sm"
                   />
-                  <span className="text-sm text-slate-500">%/mo</span>
+                  <span className="text-sm text-[#9CA3AF]">%/mo</span>
                 </div>
               )}
             </div>
@@ -944,7 +944,7 @@ ${fromName}`;
                   {items.length > 1 && (
                     <button
                       onClick={() => removeItem(item.id)}
-                      className="text-red-500 hover:text-red-700 text-lg"
+                      className="text-[#F43F5E] hover:text-[#FB7185] text-lg"
                     >
                       ×
                     </button>
@@ -955,7 +955,7 @@ ${fromName}`;
 
             <button
               onClick={addItem}
-              className="mt-2 text-blue-600 hover:text-blue-700 text-sm font-medium"
+              className="mt-2 text-[#6366F1] hover:text-[#818CF8] text-sm font-medium"
             >
               + Add Line Item
             </button>
@@ -1003,7 +1003,7 @@ ${fromName}`;
                 type="checkbox"
                 checked={includeContractTerms}
                 onChange={(e) => setIncludeContractTerms(e.target.checked)}
-                className="rounded border-slate-300"
+                className="rounded border-white/20"
               />
               Include contract terms
             </label>
@@ -1015,7 +1015,7 @@ ${fromName}`;
             rows={3}
             className="w-full px-4 py-2 rounded-lg bg-[#1F2937] border border-white/20 text-white placeholder-[#6B7280] focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1] outline-none resize-none"
           />
-          <p className="mt-2 text-xs text-slate-500">
+          <p className="mt-2 text-xs text-[#9CA3AF]">
             Payment terms ({paymentTerms.replace("_", " ")})
             {includeLateFee && ` and ${lateFeePercent}% late fee clause`}
             {includeContractTerms && " and contract terms"}

@@ -149,7 +149,7 @@ export default function SettingsPage() {
                       className="w-full h-full object-contain"
                     />
                   ) : (
-                    <span className="text-3xl text-slate-300">📷</span>
+                    <span className="text-[#9CA3AF]">No logo</span>
                   )}
                 </div>
                 <div className="flex-1">
@@ -163,7 +163,7 @@ export default function SettingsPage() {
                   />
                   <label
                     htmlFor="logo-upload"
-                    className="inline-block bg-[#111827] border border-white/10 px-4 py-2 rounded-lg text-sm text-slate-700 hover:bg-[#0A0F1E] cursor-pointer transition"
+                    className="inline-block bg-[#111827] border border-white/10 px-4 py-2 rounded-lg text-sm text-white hover:bg-[#0A0F1E] cursor-pointer transition"
                   >
                     Upload Logo
                   </label>
@@ -297,7 +297,7 @@ export default function SettingsPage() {
               className="h-2 rounded-full w-full"
               style={{ backgroundColor: info.brandColor || "#2563eb" }}
             />
-            <p className="text-xs text-slate-400 mt-4 text-center">
+            <p className="text-xs text-[#9CA3AF] mt-4 text-center">
               This is how your invoices will look
             </p>
           </div>
