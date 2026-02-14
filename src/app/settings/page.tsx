@@ -19,7 +19,7 @@ export default function SettingsPage() {
     lateFeePercent: 1.5,
     defaultNotes: "",
     logo: "",
-    brandColor: "#2563eb",
+    brandColor: "#6366F1",
     website: "",
   });
   const [saved, setSaved] = useState(false);
@@ -27,9 +27,7 @@ export default function SettingsPage() {
 
   useEffect(() => {
     const saved = getBusinessInfo();
-    if (saved) {
-      setInfo({ ...info, ...saved });
-    }
+    if (saved) setInfo({ ...info, ...saved });
   }, []);
 
   const handleSave = () => {
@@ -41,13 +39,7 @@ export default function SettingsPage() {
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    // Check file size (max 500KB)
-    if (file.size > 500 * 1024) {
-      alert("Logo must be less than 500KB");
-      return;
-    }
-
+    if (file.size > 500 * 1024) { alert("Logo must be less than 500KB"); return; }
     const reader = new FileReader();
     reader.onload = (event) => {
       const dataUrl = event.target?.result as string;
@@ -58,9 +50,7 @@ export default function SettingsPage() {
 
   const removeLogo = () => {
     setInfo({ ...info, logo: "" });
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   return (
@@ -75,15 +65,13 @@ export default function SettingsPage() {
           <h2 className="font-semibold text-white mb-4">Business Information</h2>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm text-[#9CA3AF] mb-1">
-                Business Name
-              </label>
+              <label className="block text-sm text-[#9CA3AF] mb-1">Business Name</label>
               <input
                 type="text"
                 value={info.name}
                 onChange={(e) => setInfo({ ...info, name: e.target.value })}
                 placeholder="Your Business Name"
-                className="w-full px-4 py-2 rounded-lg border border-white/10 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                className="w-full px-4 py-2 rounded-lg bg-[#1F2937] border border-white/10 text-white placeholder-[#6B7280] focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1] outline-none"
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -94,7 +82,7 @@ export default function SettingsPage() {
                   value={info.email}
                   onChange={(e) => setInfo({ ...info, email: e.target.value })}
                   placeholder="billing@example.com"
-                  className="w-full px-4 py-2 rounded-lg border border-white/10 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-[#1F2937] border border-white/10 text-white placeholder-[#6B7280] focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1] outline-none"
                 />
               </div>
               <div>
@@ -104,7 +92,7 @@ export default function SettingsPage() {
                   value={info.phone || ""}
                   onChange={(e) => setInfo({ ...info, phone: e.target.value })}
                   placeholder="+1 (555) 123-4567"
-                  className="w-full px-4 py-2 rounded-lg border border-white/10 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-[#1F2937] border border-white/10 text-white placeholder-[#6B7280] focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1] outline-none"
                 />
               </div>
             </div>
@@ -113,9 +101,9 @@ export default function SettingsPage() {
               <textarea
                 value={info.address}
                 onChange={(e) => setInfo({ ...info, address: e.target.value })}
-                placeholder="123 Business St&#10;City, State 12345"
+                placeholder={"123 Business St\nCity, State 12345"}
                 rows={2}
-                className="w-full px-4 py-2 rounded-lg border border-white/10 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none resize-none"
+                className="w-full px-4 py-2 rounded-lg bg-[#1F2937] border border-white/10 text-white placeholder-[#6B7280] focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1] outline-none resize-none"
               />
             </div>
             <div>
@@ -125,7 +113,7 @@ export default function SettingsPage() {
                 value={info.website || ""}
                 onChange={(e) => setInfo({ ...info, website: e.target.value })}
                 placeholder="https://yourwebsite.com"
-                className="w-full px-4 py-2 rounded-lg border border-white/10 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                className="w-full px-4 py-2 rounded-lg bg-[#1F2937] border border-white/10 text-white placeholder-[#6B7280] focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1] outline-none"
               />
             </div>
           </div>
@@ -135,75 +123,51 @@ export default function SettingsPage() {
         <div className="bg-[#111827] rounded-xl border border-white/10 p-6 mb-6">
           <h2 className="font-semibold text-white mb-4">Branding</h2>
           <div className="space-y-4">
-            {/* Logo */}
             <div>
-              <label className="block text-sm text-[#9CA3AF] mb-2">
-                Company Logo
-              </label>
+              <label className="block text-sm text-[#9CA3AF] mb-2">Company Logo</label>
               <div className="flex items-start gap-4">
                 <div className="w-24 h-24 border-2 border-dashed border-white/10 rounded-lg flex items-center justify-center bg-[#0A0F1E] overflow-hidden">
                   {info.logo ? (
-                    <img
-                      src={info.logo}
-                      alt="Logo"
-                      className="w-full h-full object-contain"
-                    />
+                    <img src={info.logo} alt="Logo" className="w-full h-full object-contain" />
                   ) : (
-                    <span className="text-[#9CA3AF]">No logo</span>
+                    <span className="text-[#6B7280] text-sm">No logo</span>
                   )}
                 </div>
                 <div className="flex-1">
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={handleLogoUpload}
-                    className="hidden"
-                    id="logo-upload"
-                  />
+                  <input ref={fileInputRef} type="file" accept="image/*" onChange={handleLogoUpload} className="hidden" id="logo-upload" />
                   <label
                     htmlFor="logo-upload"
-                    className="inline-block bg-[#111827] border border-white/10 px-4 py-2 rounded-lg text-sm text-white hover:bg-[#0A0F1E] cursor-pointer transition"
+                    className="inline-block bg-[#1F2937] border border-white/10 px-4 py-2 rounded-lg text-sm text-white hover:bg-[#374151] cursor-pointer transition"
                   >
                     Upload Logo
                   </label>
                   {info.logo && (
-                    <button
-                      onClick={removeLogo}
-                      className="ml-2 text-sm text-red-600 hover:text-red-700"
-                    >
+                    <button onClick={removeLogo} className="ml-2 text-sm text-[#FB7185] hover:text-[#F43F5E]">
                       Remove
                     </button>
                   )}
-                  <p className="text-xs text-[#9CA3AF] mt-2">
-                    PNG, JPG, or SVG. Max 500KB. Square logos work best.
-                  </p>
+                  <p className="text-xs text-[#6B7280] mt-2">PNG, JPG, or SVG. Max 500KB. Square logos work best.</p>
                 </div>
               </div>
             </div>
 
-            {/* Brand Color */}
             <div>
-              <label className="block text-sm text-[#9CA3AF] mb-2">
-                Brand Color
-              </label>
+              <label className="block text-sm text-[#9CA3AF] mb-2">Brand Color</label>
               <div className="flex items-center gap-3">
                 <input
                   type="color"
-                  value={info.brandColor || "#2563eb"}
+                  value={info.brandColor || "#6366F1"}
                   onChange={(e) => setInfo({ ...info, brandColor: e.target.value })}
-                  className="w-12 h-10 rounded cursor-pointer border border-white/10"
+                  className="w-12 h-10 rounded cursor-pointer border border-white/10 bg-transparent"
                 />
                 <input
                   type="text"
-                  value={info.brandColor || "#2563eb"}
+                  value={info.brandColor || "#6366F1"}
                   onChange={(e) => setInfo({ ...info, brandColor: e.target.value })}
-                  placeholder="#2563eb"
-                  className="w-32 px-3 py-2 rounded-lg border border-white/10 text-sm font-mono"
+                  placeholder="#6366F1"
+                  className="w-32 px-3 py-2 rounded-lg bg-[#1F2937] border border-white/10 text-white text-sm font-mono focus:border-[#6366F1] outline-none"
                 />
-                <span className="text-sm text-[#9CA3AF]">
-                  Used for invoice accents
-                </span>
+                <span className="text-sm text-[#6B7280]">Used for invoice accents</span>
               </div>
             </div>
           </div>
@@ -215,15 +179,11 @@ export default function SettingsPage() {
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm text-[#9CA3AF] mb-1">
-                  Default Payment Terms
-                </label>
+                <label className="block text-sm text-[#9CA3AF] mb-1">Default Payment Terms</label>
                 <select
                   value={info.paymentTerms || "net_30"}
-                  onChange={(e) =>
-                    setInfo({ ...info, paymentTerms: e.target.value })
-                  }
-                  className="w-full px-4 py-2 rounded-lg border border-white/10 focus:border-blue-500 outline-none"
+                  onChange={(e) => setInfo({ ...info, paymentTerms: e.target.value })}
+                  className="w-full px-4 py-2 rounded-lg bg-[#1F2937] border border-white/10 text-white focus:border-[#6366F1] outline-none"
                 >
                   <option value="due_on_receipt">Due on Receipt</option>
                   <option value="net_15">Net 15</option>
@@ -232,41 +192,26 @@ export default function SettingsPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm text-[#9CA3AF] mb-1">
-                  Default Late Fee (%)
-                </label>
+                <label className="block text-sm text-[#9CA3AF] mb-1">Default Late Fee (%)</label>
                 <input
                   type="number"
                   value={info.lateFeePercent || 1.5}
-                  onChange={(e) =>
-                    setInfo({
-                      ...info,
-                      lateFeePercent: parseFloat(e.target.value) || 0,
-                    })
-                  }
-                  min="0"
-                  max="10"
-                  step="0.5"
-                  className="w-full px-4 py-2 rounded-lg border border-white/10 focus:border-blue-500 outline-none"
+                  onChange={(e) => setInfo({ ...info, lateFeePercent: parseFloat(e.target.value) || 0 })}
+                  min="0" max="10" step="0.5"
+                  className="w-full px-4 py-2 rounded-lg bg-[#1F2937] border border-white/10 text-white focus:border-[#6366F1] outline-none"
                 />
               </div>
             </div>
             <div>
-              <label className="block text-sm text-[#9CA3AF] mb-1">
-                Default Notes
-              </label>
+              <label className="block text-sm text-[#9CA3AF] mb-1">Default Notes</label>
               <textarea
                 value={info.defaultNotes || ""}
-                onChange={(e) =>
-                  setInfo({ ...info, defaultNotes: e.target.value })
-                }
-                placeholder="Thank you for your business!&#10;Payment methods: Bank transfer, PayPal, Stripe"
+                onChange={(e) => setInfo({ ...info, defaultNotes: e.target.value })}
+                placeholder={"Thank you for your business!\nPayment methods: Bank transfer, PayPal, Stripe"}
                 rows={3}
-                className="w-full px-4 py-2 rounded-lg border border-white/10 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none resize-none"
+                className="w-full px-4 py-2 rounded-lg bg-[#1F2937] border border-white/10 text-white placeholder-[#6B7280] focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1] outline-none resize-none"
               />
-              <p className="text-xs text-[#9CA3AF] mt-1">
-                These notes will be pre-filled on new invoices.
-              </p>
+              <p className="text-xs text-[#6B7280] mt-1">These notes will be pre-filled on new invoices.</p>
             </div>
           </div>
         </div>
@@ -276,30 +221,16 @@ export default function SettingsPage() {
           <h2 className="font-semibold text-white mb-4">Preview</h2>
           <div className="border border-white/10 rounded-lg p-6 bg-[#0A0F1E]">
             <div className="flex items-center gap-4 mb-4">
-              {info.logo && (
-                <img
-                  src={info.logo}
-                  alt="Logo"
-                  className="w-16 h-16 object-contain"
-                />
-              )}
+              {info.logo && <img src={info.logo} alt="Logo" className="w-16 h-16 object-contain" />}
               <div>
-                <h3
-                  className="text-xl font-bold"
-                  style={{ color: info.brandColor || "#2563eb" }}
-                >
+                <h3 className="text-xl font-bold" style={{ color: info.brandColor || "#6366F1" }}>
                   {info.name || "Your Business Name"}
                 </h3>
                 <p className="text-sm text-[#9CA3AF]">{info.email}</p>
               </div>
             </div>
-            <div
-              className="h-2 rounded-full w-full"
-              style={{ backgroundColor: info.brandColor || "#2563eb" }}
-            />
-            <p className="text-xs text-[#9CA3AF] mt-4 text-center">
-              This is how your invoices will look
-            </p>
+            <div className="h-2 rounded-full w-full" style={{ backgroundColor: info.brandColor || "#6366F1" }} />
+            <p className="text-xs text-[#6B7280] mt-4 text-center">This is how your invoices will look</p>
           </div>
         </div>
 
@@ -309,11 +240,7 @@ export default function SettingsPage() {
             onClick={handleSave}
             className="bg-[#6366F1] text-white px-8 py-3 rounded-lg hover:bg-[#818CF8] transition flex items-center gap-2"
           >
-            {saved ? (
-              <>✓ Saved!</>
-            ) : (
-              <>Save Settings</>
-            )}
+            {saved ? <>✓ Saved!</> : <>Save Settings</>}
           </button>
         </div>
       </main>

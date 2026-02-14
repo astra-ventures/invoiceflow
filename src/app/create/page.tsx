@@ -51,6 +51,7 @@ export default function CreateInvoice() {
   const [notes, setNotes] = useState("");
   const [currency, setCurrency] = useState("USD");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [previewHtml, setPreviewHtml] = useState<string | null>(null);
   const [clients, setClients] = useState<Client[]>([]);
   const [showClientDropdown, setShowClientDropdown] = useState(false);
@@ -238,6 +239,7 @@ export default function CreateInvoice() {
 
   const generateInvoice = async () => {
     setLoading(true);
+    setError(null);
     try {
       const fullNotes = buildFullNotes();
 
@@ -310,7 +312,7 @@ export default function CreateInvoice() {
         markTimeEntriesAsBilled(timeEntryIds, invoice.id);
       }
     } catch (error) {
-      alert("Error generating invoice. Please try again.");
+      setError("Failed to generate invoice. Please check your connection and try again.");
       console.error(error);
     } finally {
       setLoading(false);
@@ -408,7 +410,7 @@ ${fromName}`;
               </button>
               <button
                 onClick={shareWhatsApp}
-                className="text-green-600 hover:text-green-700 px-3 py-2 rounded-lg border border-green-200 hover:bg-green-50 transition text-sm"
+                className="text-[#34D399] hover:text-[#10B981] px-3 py-2 rounded-lg border border-[#10B981]/20 hover:bg-[#10B981]/10 transition text-sm"
               >
                 💬 WhatsApp
               </button>
@@ -420,7 +422,7 @@ ${fromName}`;
               </button>
               <button
                 onClick={emailInvoice}
-                className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition flex items-center gap-2 text-sm"
+                className="bg-[#10B981] text-white px-4 py-2 rounded-lg hover:bg-[#059669] transition flex items-center gap-2 text-sm"
               >
                 ✉️ Email
               </button>
@@ -566,7 +568,7 @@ ${fromName}`;
                 </button>
               )}
               {businessInfoSaved && (
-                <span className="text-sm text-green-600">✓ Saved</span>
+                <span className="text-sm text-[#34D399]">✓ Saved</span>
               )}
             </div>
             <div className="space-y-4">
@@ -918,7 +920,7 @@ ${fromName}`;
                     }
                     min="0"
                     step="0.5"
-                    className="w-full px-3 py-2 rounded border border-white/10 text-right focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                    className="w-full px-3 py-2 rounded border border-white/10 text-right focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1] outline-none"
                   />
                 </div>
                 <div className="col-span-2">
@@ -934,7 +936,7 @@ ${fromName}`;
                     }
                     min="0"
                     step="0.01"
-                    className="w-full px-3 py-2 rounded border border-white/10 text-right focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                    className="w-full px-3 py-2 rounded border border-white/10 text-right focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1] outline-none"
                   />
                 </div>
                 <div className="col-span-2 flex items-center justify-end gap-2">
@@ -1024,6 +1026,17 @@ ${fromName}`;
           </p>
         </div>
 
+        {/* Error Display */}
+        {error && (
+          <div className="mt-6 bg-[#F43F5E]/10 border border-[#F43F5E]/20 rounded-xl p-4 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <span className="text-[#FB7185]">⚠️</span>
+              <span className="text-sm text-[#FB7185]">{error}</span>
+            </div>
+            <button onClick={() => setError(null)} className="text-[#9CA3AF] hover:text-white text-sm">✕</button>
+          </div>
+        )}
+
         {/* Generate Button */}
         <div className="mt-8 flex justify-center">
           <button
@@ -1034,7 +1047,7 @@ ${fromName}`;
               !toName ||
               items.every((i) => !i.description)
             }
-            className="bg-[#6366F1] text-white px-12 py-4 rounded-xl text-lg font-semibold hover:bg-[#818CF8] transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-600/25"
+            className="bg-[#6366F1] text-white px-12 py-4 rounded-xl text-lg font-semibold hover:bg-[#818CF8] transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[#6366F1]/25"
           >
             {loading ? "Generating..." : "Generate Invoice →"}
           </button>
