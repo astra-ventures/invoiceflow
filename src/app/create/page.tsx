@@ -383,18 +383,18 @@ ${fromName}`;
   if (previewHtml) {
     return (
       <div className="min-h-screen bg-slate-100">
-        <div className="bg-white border-b border-slate-200 sticky top-0 z-10">
+        <div className="bg-white border-b border-white/20 sticky top-0 z-10">
           <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
             <button
               onClick={() => setPreviewHtml(null)}
-              className="text-slate-600 hover:text-slate-900 flex items-center gap-2"
+              className="text-[#9CA3AF] hover:text-white flex items-center gap-2"
             >
               ← Back to Editor
             </button>
             <div className="flex items-center gap-2 flex-wrap">
               <button
                 onClick={copyPaymentReminder}
-                className="text-slate-600 hover:text-slate-900 px-3 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 transition text-sm"
+                className="text-[#9CA3AF] hover:text-white px-3 py-2 rounded-lg border border-white/20 hover:bg-slate-50 transition text-sm"
               >
                 📋 Copy Reminder
               </button>
@@ -406,7 +406,7 @@ ${fromName}`;
               </button>
               <button
                 onClick={shareSMS}
-                className="text-blue-600 hover:text-blue-700 px-3 py-2 rounded-lg border border-blue-200 hover:bg-blue-50 transition text-sm"
+                className="text-[#6366F1] hover:text-blue-700 px-3 py-2 rounded-lg border border-blue-200 hover:bg-blue-50 transition text-sm"
               >
                 📱 SMS
               </button>
@@ -418,7 +418,7 @@ ${fromName}`;
               </button>
               <button
                 onClick={downloadPdf}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition flex items-center gap-2 text-sm"
+                className="bg-[#6366F1] text-white px-4 py-2 rounded-lg hover:bg-[#818CF8] transition flex items-center gap-2 text-sm"
               >
                 🖨️ Print / PDF
               </button>
@@ -651,7 +651,7 @@ ${fromName}`;
             </div>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm text-slate-600 mb-1">
+                <label className="block text-sm text-[#9CA3AF] mb-1">
                   Client Name *
                 </label>
                 <input
@@ -659,12 +659,12 @@ ${fromName}`;
                   value={toName}
                   onChange={(e) => setToName(e.target.value)}
                   placeholder="Client Inc"
-                  className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                  className="w-full px-4 py-2 rounded-lg border border-white/20 bg-white/5 text-white placeholder-[#9CA3AF] focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1] outline-none"
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm text-slate-600 mb-1">
+                  <label className="block text-sm text-[#9CA3AF] mb-1">
                     Email
                   </label>
                   <input
@@ -672,11 +672,11 @@ ${fromName}`;
                     value={toEmail}
                     onChange={(e) => setToEmail(e.target.value)}
                     placeholder="accounts@client.com"
-                    className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                    className="w-full px-4 py-2 rounded-lg border border-white/20 bg-white/5 text-white placeholder-[#9CA3AF] focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1] outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm text-slate-600 mb-1">
+                  <label className="block text-sm text-[#9CA3AF] mb-1">
                     Phone
                   </label>
                   <input
@@ -684,12 +684,12 @@ ${fromName}`;
                     value={toPhone}
                     onChange={(e) => setToPhone(e.target.value)}
                     placeholder="+1 555 123 4567"
-                    className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                    className="w-full px-4 py-2 rounded-lg border border-white/20 bg-white/5 text-white placeholder-[#9CA3AF] focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1] outline-none"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-sm text-slate-600 mb-1">
+                <label className="block text-sm text-[#9CA3AF] mb-1">
                   Address
                 </label>
                 <textarea
@@ -697,15 +697,15 @@ ${fromName}`;
                   onChange={(e) => setToAddress(e.target.value)}
                   placeholder="456 Client Ave&#10;Los Angeles, CA 90001"
                   rows={2}
-                  className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none resize-none"
+                  className="w-full px-4 py-2 rounded-lg border border-white/20 bg-white/5 text-white placeholder-[#9CA3AF] focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1] outline-none resize-none"
                 />
               </div>
-              <label className="flex items-center gap-2 text-sm text-slate-600">
+              <label className="flex items-center gap-2 text-sm text-[#9CA3AF]">
                 <input
                   type="checkbox"
                   checked={saveClientChecked}
                   onChange={(e) => setSaveClientChecked(e.target.checked)}
-                  className="rounded border-slate-300"
+                  className="rounded border-white/20 bg-white/10"
                 />
                 Save client for future invoices
               </label>
@@ -714,25 +714,25 @@ ${fromName}`;
         </div>
 
         {/* Invoice Details */}
-        <div className="mt-8 bg-white p-6 rounded-xl border border-slate-200">
+        <div className="mt-8 bg-[#111827] p-6 rounded-xl border border-white/10">
           <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
-            <h2 className="font-semibold text-slate-900">Invoice Details</h2>
+            <h2 className="font-semibold text-white">Invoice Details</h2>
             <div className="flex flex-wrap items-center gap-4">
               <div>
-                <label className="text-sm text-slate-600 mr-2">Invoice #</label>
+                <label className="text-sm text-[#9CA3AF] mr-2">Invoice #</label>
                 <input
                   type="text"
                   value={invoiceNumber}
                   onChange={(e) => setInvoiceNumber(e.target.value)}
-                  className="px-3 py-1 rounded border border-slate-200 w-36"
+                  className="px-3 py-1 rounded border border-white/20 bg-white/5 text-white w-36"
                 />
               </div>
               <div>
-                <label className="text-sm text-slate-600 mr-2">Currency</label>
+                <label className="text-sm text-[#9CA3AF] mr-2">Currency</label>
                 <select
                   value={currency}
                   onChange={(e) => setCurrency(e.target.value)}
-                  className="px-3 py-1 rounded border border-slate-200"
+                  className="px-3 py-1 rounded border border-white/20 bg-white/5 text-white"
                 >
                   <option value="USD">USD ($)</option>
                   <option value="EUR">EUR (€)</option>
@@ -745,15 +745,15 @@ ${fromName}`;
           </div>
 
           {/* Payment Terms Row */}
-          <div className="flex flex-wrap items-center gap-4 mb-6 p-4 bg-slate-50 rounded-lg">
+          <div className="flex flex-wrap items-center gap-4 mb-6 p-4 bg-white/5 rounded-lg">
             <div>
-              <label className="text-sm text-slate-600 mr-2">
+              <label className="text-sm text-[#9CA3AF] mr-2">
                 Payment Terms
               </label>
               <select
                 value={paymentTerms}
                 onChange={(e) => setPaymentTerms(e.target.value)}
-                className="px-3 py-1 rounded border border-slate-200"
+                className="px-3 py-1 rounded border border-white/20 bg-white/5 text-white"
               >
                 <option value="due_on_receipt">Due on Receipt</option>
                 <option value="net_15">Net 15</option>
@@ -762,21 +762,21 @@ ${fromName}`;
               </select>
             </div>
             <div>
-              <label className="text-sm text-slate-600 mr-2">Due Date</label>
+              <label className="text-sm text-[#9CA3AF] mr-2">Due Date</label>
               <input
                 type="date"
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
-                className="px-3 py-1 rounded border border-slate-200"
+                className="px-3 py-1 rounded border border-white/20 bg-white/5 text-white"
               />
             </div>
             <div className="flex items-center gap-2">
-              <label className="flex items-center gap-2 text-sm text-slate-600">
+              <label className="flex items-center gap-2 text-sm text-[#9CA3AF]">
                 <input
                   type="checkbox"
                   checked={includeLateFee}
                   onChange={(e) => setIncludeLateFee(e.target.checked)}
-                  className="rounded border-slate-300"
+                  className="rounded border-white/20 bg-white/10"
                 />
                 Late fee
               </label>
@@ -791,7 +791,7 @@ ${fromName}`;
                     min="0"
                     max="10"
                     step="0.5"
-                    className="w-16 px-2 py-1 rounded border border-slate-200 text-sm"
+                    className="w-16 px-2 py-1 rounded border border-white/20 text-sm"
                   />
                   <span className="text-sm text-slate-500">%/mo</span>
                 </div>
@@ -825,7 +825,7 @@ ${fromName}`;
 
           {/* Line Items */}
           <div className="mt-4">
-            <div className="grid grid-cols-12 gap-4 text-sm text-slate-600 mb-2">
+            <div className="grid grid-cols-12 gap-4 text-sm text-[#9CA3AF] mb-2">
               <div className="col-span-6">Description</div>
               <div className="col-span-2 text-right">Qty</div>
               <div className="col-span-2 text-right">Unit Price</div>
@@ -845,7 +845,7 @@ ${fromName}`;
                       updateItem(item.id, "description", e.target.value)
                     }
                     placeholder="Web Development"
-                    className="w-full px-3 py-2 rounded border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                    className="w-full px-3 py-2 rounded border border-white/20 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
                   />
                 </div>
                 <div className="col-span-2">
@@ -861,7 +861,7 @@ ${fromName}`;
                     }
                     min="0"
                     step="0.5"
-                    className="w-full px-3 py-2 rounded border border-slate-200 text-right focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                    className="w-full px-3 py-2 rounded border border-white/20 text-right focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
                   />
                 </div>
                 <div className="col-span-2">
@@ -877,11 +877,11 @@ ${fromName}`;
                     }
                     min="0"
                     step="0.01"
-                    className="w-full px-3 py-2 rounded border border-slate-200 text-right focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                    className="w-full px-3 py-2 rounded border border-white/20 text-right focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
                   />
                 </div>
                 <div className="col-span-2 flex items-center justify-end gap-2">
-                  <span className="text-slate-900">
+                  <span className="text-white">
                     {formatCurrency(item.quantity * item.unitPrice)}
                   </span>
                   {items.length > 1 && (
@@ -898,7 +898,7 @@ ${fromName}`;
 
             <button
               onClick={addItem}
-              className="mt-2 text-blue-600 hover:text-blue-700 text-sm font-medium"
+              className="mt-2 text-[#6366F1] hover:text-blue-700 text-sm font-medium"
             >
               + Add Line Item
             </button>
@@ -907,11 +907,11 @@ ${fromName}`;
           {/* Totals */}
           <div className="mt-8 flex justify-end">
             <div className="w-64 space-y-3">
-              <div className="flex justify-between text-slate-600">
+              <div className="flex justify-between text-[#9CA3AF]">
                 <span>Subtotal</span>
                 <span>{formatCurrency(subtotal)}</span>
               </div>
-              <div className="flex justify-between items-center text-slate-600">
+              <div className="flex justify-between items-center text-[#9CA3AF]">
                 <div className="flex items-center gap-2">
                   <span>Tax</span>
                   <input
@@ -923,13 +923,13 @@ ${fromName}`;
                     min="0"
                     max="100"
                     step="0.5"
-                    className="w-16 px-2 py-1 rounded border border-slate-200 text-right text-sm"
+                    className="w-16 px-2 py-1 rounded border border-white/20 text-right text-sm"
                   />
                   <span className="text-sm">%</span>
                 </div>
                 <span>{formatCurrency(tax)}</span>
               </div>
-              <div className="flex justify-between text-lg font-semibold text-slate-900 pt-3 border-t border-slate-200">
+              <div className="flex justify-between text-lg font-semibold text-white pt-3 border-t border-white/20">
                 <span>Total</span>
                 <span>{formatCurrency(total)}</span>
               </div>
@@ -938,10 +938,10 @@ ${fromName}`;
         </div>
 
         {/* Notes */}
-        <div className="mt-8 bg-white p-6 rounded-xl border border-slate-200">
+        <div className="mt-8 bg-white p-6 rounded-xl border border-white/20">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-semibold text-slate-900">Notes & Terms</h2>
-            <label className="flex items-center gap-2 text-sm text-slate-600">
+            <h2 className="font-semibold text-white">Notes & Terms</h2>
+            <label className="flex items-center gap-2 text-sm text-[#9CA3AF]">
               <input
                 type="checkbox"
                 checked={includeContractTerms}
@@ -956,7 +956,7 @@ ${fromName}`;
             onChange={(e) => setNotes(e.target.value)}
             placeholder="Additional notes (payment terms and late fee clause will be auto-added)..."
             rows={3}
-            className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none resize-none"
+            className="w-full px-4 py-2 rounded-lg border border-white/20 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none resize-none"
           />
           <p className="mt-2 text-xs text-slate-500">
             Payment terms ({paymentTerms.replace("_", " ")})
@@ -977,7 +977,7 @@ ${fromName}`;
               !toName ||
               items.every((i) => !i.description)
             }
-            className="bg-blue-600 text-white px-12 py-4 rounded-xl text-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-600/25"
+            className="bg-[#6366F1] text-white px-12 py-4 rounded-xl text-lg font-semibold hover:bg-[#818CF8] transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-600/25"
           >
             {loading ? "Generating..." : "Generate Invoice →"}
           </button>

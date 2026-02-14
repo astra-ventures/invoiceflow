@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { AppNavbar } from "../_components/AppNavbar";
 import {
   getInvoices,
   updateInvoiceStatus,
@@ -78,60 +79,32 @@ export default function InvoiceHistory() {
     .reduce((sum, inv) => sum + inv.total, 0);
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Header */}
-      <header className="bg-white border-b border-slate-200">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold text-slate-900">
-            Invoice<span className="text-blue-600">Flow</span>
-          </Link>
-          <nav className="flex items-center gap-4">
-            <Link href="/create" className="text-slate-600 hover:text-slate-900">
-              Create
-            </Link>
-            <span className="text-blue-600 font-medium">History</span>
-            <Link href="/time" className="text-slate-600 hover:text-slate-900">
-              Time
-            </Link>
-            <Link href="/recurring" className="text-slate-600 hover:text-slate-900">
-              Recurring
-            </Link>
-            <Link href="/analytics" className="text-slate-600 hover:text-slate-900">
-              Analytics
-            </Link>
-            <Link
-              href="/create"
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
-            >
-              + New Invoice
-            </Link>
-          </nav>
-        </div>
-      </header>
-
-      <main className="max-w-6xl mx-auto px-6 py-8">
+    <div className="min-h-screen bg-[#0A0F1E]">
+      <AppNavbar />
+      
+      <main className="max-w-6xl mx-auto px-6 pt-24 pb-8">
         {/* Stats Summary */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white rounded-xl border border-slate-200 p-6">
-            <div className="text-sm text-slate-600 mb-1">Total Invoiced</div>
-            <div className="text-2xl font-bold text-slate-900">
+          <div className="bg-[#111827] rounded-xl border border-white/20 p-6">
+            <div className="text-sm text-[#9CA3AF] mb-1">Total Invoiced</div>
+            <div className="text-2xl font-bold text-white">
               {formatCurrency(totalInvoiced, "USD")}
             </div>
           </div>
-          <div className="bg-white rounded-xl border border-slate-200 p-6">
-            <div className="text-sm text-slate-600 mb-1">Paid</div>
+          <div className="bg-[#111827] rounded-xl border border-white/20 p-6">
+            <div className="text-sm text-[#9CA3AF] mb-1">Paid</div>
             <div className="text-2xl font-bold text-green-600">
               {formatCurrency(totalPaid, "USD")}
             </div>
           </div>
-          <div className="bg-white rounded-xl border border-slate-200 p-6">
-            <div className="text-sm text-slate-600 mb-1">Outstanding</div>
+          <div className="bg-[#111827] rounded-xl border border-white/20 p-6">
+            <div className="text-sm text-[#9CA3AF] mb-1">Outstanding</div>
             <div className="text-2xl font-bold text-amber-600">
               {formatCurrency(totalOutstanding, "USD")}
             </div>
           </div>
-          <div className="bg-white rounded-xl border border-slate-200 p-6">
-            <div className="text-sm text-slate-600 mb-1">Overdue</div>
+          <div className="bg-[#111827] rounded-xl border border-white/20 p-6">
+            <div className="text-sm text-[#9CA3AF] mb-1">Overdue</div>
             <div className="text-2xl font-bold text-red-600">
               {formatCurrency(totalOverdue, "USD")}
             </div>
@@ -140,7 +113,7 @@ export default function InvoiceHistory() {
 
         {/* Filters */}
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold text-slate-900">Invoice History</h1>
+          <h1 className="text-2xl font-bold text-white">Invoice History</h1>
           <div className="flex gap-2">
             {(["all", "draft", "sent", "overdue", "paid"] as const).map((f) => (
               <button
@@ -148,8 +121,8 @@ export default function InvoiceHistory() {
                 onClick={() => setFilter(f)}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
                   filter === f
-                    ? "bg-blue-600 text-white"
-                    : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
+                    ? "bg-[#6366F1] text-white"
+                    : "bg-[#111827] text-[#9CA3AF] border border-white/20 hover:bg-slate-50"
                 }`}
               >
                 {f.charAt(0).toUpperCase() + f.slice(1)}
@@ -164,44 +137,44 @@ export default function InvoiceHistory() {
         </div>
 
         {filteredInvoices.length === 0 ? (
-          <div className="bg-white rounded-xl border border-slate-200 p-12 text-center">
+          <div className="bg-[#111827] rounded-xl border border-white/20 p-12 text-center">
             <div className="text-4xl mb-4">📄</div>
-            <h2 className="text-xl font-semibold text-slate-900 mb-2">
+            <h2 className="text-xl font-semibold text-white mb-2">
               {filter === "all" ? "No invoices yet" : `No ${filter} invoices`}
             </h2>
-            <p className="text-slate-600 mb-6">
+            <p className="text-[#9CA3AF] mb-6">
               {filter === "all"
                 ? "Create your first invoice to get started"
                 : "No invoices match this filter"}
             </p>
             <Link
               href="/create"
-              className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
+              className="inline-block bg-[#6366F1] text-white px-6 py-3 rounded-lg hover:bg-[#818CF8] transition"
             >
               Create Invoice
             </Link>
           </div>
         ) : (
-          <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+          <div className="bg-[#111827] rounded-xl border border-white/20 overflow-hidden">
             <table className="w-full">
-              <thead className="bg-slate-50 border-b border-slate-200">
+              <thead className="bg-slate-50 border-b border-white/20">
                 <tr>
-                  <th className="text-left px-6 py-3 text-sm font-medium text-slate-600">
+                  <th className="text-left px-6 py-3 text-sm font-medium text-[#9CA3AF]">
                     Invoice
                   </th>
-                  <th className="text-left px-6 py-3 text-sm font-medium text-slate-600">
+                  <th className="text-left px-6 py-3 text-sm font-medium text-[#9CA3AF]">
                     Client
                   </th>
-                  <th className="text-left px-6 py-3 text-sm font-medium text-slate-600">
+                  <th className="text-left px-6 py-3 text-sm font-medium text-[#9CA3AF]">
                     Created
                   </th>
-                  <th className="text-left px-6 py-3 text-sm font-medium text-slate-600">
+                  <th className="text-left px-6 py-3 text-sm font-medium text-[#9CA3AF]">
                     Due Date
                   </th>
-                  <th className="text-right px-6 py-3 text-sm font-medium text-slate-600">
+                  <th className="text-right px-6 py-3 text-sm font-medium text-[#9CA3AF]">
                     Amount
                   </th>
-                  <th className="text-left px-6 py-3 text-sm font-medium text-slate-600">
+                  <th className="text-left px-6 py-3 text-sm font-medium text-[#9CA3AF]">
                     Status
                   </th>
                 </tr>
@@ -222,23 +195,23 @@ export default function InvoiceHistory() {
                   return (
                     <tr key={invoice.id} className="hover:bg-slate-50">
                       <td className="px-6 py-4">
-                        <span className="font-medium text-slate-900">
+                        <span className="font-medium text-white">
                           {invoice.invoiceNumber}
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-slate-900">{invoice.clientName}</div>
+                        <div className="text-white">{invoice.clientName}</div>
                         {invoice.clientEmail && (
                           <div className="text-slate-500 text-xs">{invoice.clientEmail}</div>
                         )}
                       </td>
-                      <td className="px-6 py-4 text-slate-600">
+                      <td className="px-6 py-4 text-[#9CA3AF]">
                         {formatDate(invoice.createdAt)}
                       </td>
                       <td className="px-6 py-4">
                         {invoice.dueDate ? (
                           <div>
-                            <span className={`${isOverdue ? "text-red-600 font-medium" : isDueSoon ? "text-amber-600" : "text-slate-600"}`}>
+                            <span className={`${isOverdue ? "text-red-600 font-medium" : isDueSoon ? "text-amber-600" : "text-[#9CA3AF]"}`}>
                               {formatDate(invoice.dueDate)}
                             </span>
                             {isOverdue && (
@@ -262,7 +235,7 @@ export default function InvoiceHistory() {
                         )}
                       </td>
                       <td className="px-6 py-4 text-right">
-                        <div className="font-medium text-slate-900">
+                        <div className="font-medium text-white">
                           {formatCurrency(invoice.total, invoice.currency)}
                         </div>
                         {lateFeeInfo && lateFeeInfo.fee > 0 && (

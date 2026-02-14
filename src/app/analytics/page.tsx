@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { AppNavbar } from "../_components/AppNavbar";
 import { getInvoiceAnalytics, type InvoiceAnalytics } from "@/lib/storage";
 
 export default function AnalyticsPage() {
@@ -13,7 +14,7 @@ export default function AnalyticsPage() {
 
   if (!analytics) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#0A0F1E] flex items-center justify-center">
         <div className="text-slate-500">Loading analytics...</div>
       </div>
     );
@@ -36,46 +37,46 @@ export default function AnalyticsPage() {
   const maxRevenue = Math.max(...analytics.monthlyRevenue.map((m) => m.amount), 1);
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[#0A0F1E]">
       {/* Header */}
-      <header className="bg-white border-b border-slate-200">
+      <header className="bg-[#111827] border-b border-white/20">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold text-slate-900">
-            Invoice<span className="text-blue-600">Flow</span>
+          <Link href="/" className="text-2xl font-bold text-white">
+            Invoice<span className="text-[#6366F1]">Flow</span>
           </Link>
           <nav className="flex items-center gap-4">
-            <Link href="/create" className="text-slate-600 hover:text-slate-900">
+            <Link href="/create" className="text-[#9CA3AF] hover:text-white">
               Create
             </Link>
-            <Link href="/history" className="text-slate-600 hover:text-slate-900">
+            <Link href="/history" className="text-[#9CA3AF] hover:text-white">
               History
             </Link>
-            <Link href="/time" className="text-slate-600 hover:text-slate-900">
+            <Link href="/time" className="text-[#9CA3AF] hover:text-white">
               Time
             </Link>
-            <Link href="/recurring" className="text-slate-600 hover:text-slate-900">
+            <Link href="/recurring" className="text-[#9CA3AF] hover:text-white">
               Recurring
             </Link>
-            <span className="text-blue-600 font-medium">Analytics</span>
+            <span className="text-[#6366F1] font-medium">Analytics</span>
           </nav>
         </div>
       </header>
 
       <main className="max-w-6xl mx-auto px-6 py-8">
-        <h1 className="text-2xl font-bold text-slate-900 mb-8">Invoice Analytics</h1>
+        <h1 className="text-2xl font-bold text-white mb-8">Invoice Analytics</h1>
 
         {/* Key Metrics */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white p-6 rounded-xl border border-slate-200">
+          <div className="bg-[#111827] p-6 rounded-xl border border-white/20">
             <div className="text-sm text-slate-500 mb-1">Total Invoiced</div>
-            <div className="text-2xl font-bold text-slate-900">
+            <div className="text-2xl font-bold text-white">
               {formatCurrency(analytics.totalInvoiced)}
             </div>
             <div className="text-xs text-slate-400 mt-1">
               {analytics.invoiceCount} invoices
             </div>
           </div>
-          <div className="bg-white p-6 rounded-xl border border-slate-200">
+          <div className="bg-[#111827] p-6 rounded-xl border border-white/20">
             <div className="text-sm text-slate-500 mb-1">Total Paid</div>
             <div className="text-2xl font-bold text-green-600">
               {formatCurrency(analytics.totalPaid)}
@@ -84,14 +85,14 @@ export default function AnalyticsPage() {
               {analytics.paidCount} paid
             </div>
           </div>
-          <div className="bg-white p-6 rounded-xl border border-slate-200">
+          <div className="bg-[#111827] p-6 rounded-xl border border-white/20">
             <div className="text-sm text-slate-500 mb-1">Outstanding</div>
             <div className="text-2xl font-bold text-amber-600">
               {formatCurrency(analytics.totalOutstanding)}
             </div>
             <div className="text-xs text-slate-400 mt-1">awaiting payment</div>
           </div>
-          <div className="bg-white p-6 rounded-xl border border-slate-200">
+          <div className="bg-[#111827] p-6 rounded-xl border border-white/20">
             <div className="text-sm text-slate-500 mb-1">Overdue</div>
             <div className="text-2xl font-bold text-red-600">
               {formatCurrency(analytics.totalOverdue)}
@@ -104,9 +105,9 @@ export default function AnalyticsPage() {
 
         {/* Average Time to Payment */}
         <div className="grid md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white p-6 rounded-xl border border-slate-200">
+          <div className="bg-[#111827] p-6 rounded-xl border border-white/20">
             <div className="text-sm text-slate-500 mb-1">Avg. Time to Payment</div>
-            <div className="text-3xl font-bold text-slate-900">
+            <div className="text-3xl font-bold text-white">
               {analytics.averageTimeToPayDays}{" "}
               <span className="text-lg font-normal text-slate-500">days</span>
             </div>
@@ -115,9 +116,9 @@ export default function AnalyticsPage() {
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-xl border border-slate-200">
+          <div className="bg-[#111827] p-6 rounded-xl border border-white/20">
             <div className="text-sm text-slate-500 mb-1">Collection Rate</div>
-            <div className="text-3xl font-bold text-slate-900">
+            <div className="text-3xl font-bold text-white">
               {analytics.invoiceCount > 0
                 ? Math.round((analytics.paidCount / analytics.invoiceCount) * 100)
                 : 0}
@@ -137,13 +138,13 @@ export default function AnalyticsPage() {
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-xl border border-slate-200">
+          <div className="bg-[#111827] p-6 rounded-xl border border-white/20">
             <div className="text-sm text-slate-500 mb-2">Currency Breakdown</div>
             <div className="space-y-2">
               {Object.entries(analytics.currencyBreakdown).map(([currency, amount]) => (
                 <div key={currency} className="flex justify-between text-sm">
-                  <span className="text-slate-600">{currency}</span>
-                  <span className="font-medium text-slate-900">
+                  <span className="text-[#9CA3AF]">{currency}</span>
+                  <span className="font-medium text-white">
                     {formatCurrency(amount, currency)}
                   </span>
                 </div>
@@ -158,8 +159,8 @@ export default function AnalyticsPage() {
         {/* Charts Row */}
         <div className="grid md:grid-cols-2 gap-6 mb-8">
           {/* Monthly Revenue Chart */}
-          <div className="bg-white p-6 rounded-xl border border-slate-200">
-            <h3 className="font-semibold text-slate-900 mb-4">Monthly Revenue</h3>
+          <div className="bg-[#111827] p-6 rounded-xl border border-white/20">
+            <h3 className="font-semibold text-white mb-4">Monthly Revenue</h3>
             {analytics.monthlyRevenue.length > 0 ? (
               <div className="h-48 flex items-end gap-2">
                 {analytics.monthlyRevenue.map((month) => (
@@ -168,7 +169,7 @@ export default function AnalyticsPage() {
                     className="flex-1 flex flex-col items-center"
                   >
                     <div
-                      className="w-full bg-blue-500 rounded-t hover:bg-blue-600 transition-colors cursor-pointer"
+                      className="w-full bg-blue-500 rounded-t hover:bg-[#6366F1] transition-colors cursor-pointer"
                       style={{
                         height: `${(month.amount / maxRevenue) * 160}px`,
                         minHeight: month.amount > 0 ? "4px" : "0",
@@ -189,17 +190,17 @@ export default function AnalyticsPage() {
           </div>
 
           {/* Top Clients */}
-          <div className="bg-white p-6 rounded-xl border border-slate-200">
-            <h3 className="font-semibold text-slate-900 mb-4">Top Clients</h3>
+          <div className="bg-[#111827] p-6 rounded-xl border border-white/20">
+            <h3 className="font-semibold text-white mb-4">Top Clients</h3>
             {analytics.topClients.length > 0 ? (
               <div className="space-y-3">
                 {analytics.topClients.map((client, idx) => (
                   <div key={client.name} className="flex items-center gap-3">
-                    <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-600">
+                    <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-xs font-medium text-[#9CA3AF]">
                       {idx + 1}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="font-medium text-slate-900 truncate">
+                      <div className="font-medium text-white truncate">
                         {client.name}
                       </div>
                       <div className="h-2 bg-slate-100 rounded-full overflow-hidden mt-1">
@@ -213,7 +214,7 @@ export default function AnalyticsPage() {
                         />
                       </div>
                     </div>
-                    <div className="text-sm font-medium text-slate-600">
+                    <div className="text-sm font-medium text-[#9CA3AF]">
                       {formatCurrency(client.total)}
                     </div>
                   </div>
