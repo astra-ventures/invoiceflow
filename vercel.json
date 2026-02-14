@@ -1,14 +1,4 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/next"
-    }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  },
   "headers": [
     {
       "source": "/(.*)",
@@ -30,14 +20,6 @@
           "value": "strict-origin-when-cross-origin"
         }
       ]
-    }
-  ],
-  "routes": [
-    {
-      "src": "/",
-      "headers": {
-        "cache-control": "s-maxage=0"
-      }
     }
   ]
 }
