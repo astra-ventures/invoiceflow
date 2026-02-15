@@ -1,20 +1,22 @@
 import { loadStripe } from '@stripe/stripe-js';
 
+// Check if Stripe is properly configured
+const stripePublicKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+
 // Make sure to call `loadStripe` outside of a component's render to avoid
 // recreating the `Stripe` object on every render.
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
-);
+const stripePromise = stripePublicKey ? loadStripe(stripePublicKey) : null;
 
 export default stripePromise;
 
-// Stripe configuration
+// Stripe configuration with safe fallbacks
 export const STRIPE_CONFIG = {
-  publicKey: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
-  secretKey: process.env.STRIPE_SECRET_KEY!,
-  proPriceId: process.env.STRIPE_PRO_MONTHLY_PRICE_ID!,
-  successUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/upgrade/success`,
-  cancelUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/upgrade/cancel`,
+  publicKey: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '',
+  secretKey: process.env.STRIPE_SECRET_KEY || '',
+  proPriceId: process.env.STRIPE_PRO_MONTHLY_PRICE_ID || '',
+  successUrl: `${process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_VERCEL_URL || 'http://localhost:3000'}/upgrade/success`,
+  cancelUrl: `${process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_VERCEL_URL || 'http://localhost:3000'}/upgrade/cancel`,
+  isConfigured: !!(stripePublicKey && process.env.STRIPE_SECRET_KEY && process.env.STRIPE_PRO_MONTHLY_PRICE_ID),
 };
 
 // Pro tier features
@@ -39,6 +41,11 @@ export const FREE_TIER = {
 
 // Check if user has pro features (placeholder - in real app would check subscription status)
 export const hasProAccess = (): boolean => {
+  // If Stripe isn't configured, Pro features are disabled
+  if (!STRIPE_CONFIG.isConfigured) {
+    return false;
+  }
+  
   // TODO: In production, this would check actual subscription status
   // For now, check localStorage or cookie for demo purposes
   if (typeof window !== 'undefined') {
