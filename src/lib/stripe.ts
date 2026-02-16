@@ -41,9 +41,9 @@ export const FREE_TIER = {
 
 // Check if user has pro features (placeholder - in real app would check subscription status)
 export const hasProAccess = (): boolean => {
-  // If Stripe isn't configured, Pro features are disabled
+  // If Stripe isn't configured, give everyone pro access (all features are client-side anyway)
   if (!STRIPE_CONFIG.isConfigured) {
-    return false;
+    return true;
   }
   
   // TODO: In production, this would check actual subscription status

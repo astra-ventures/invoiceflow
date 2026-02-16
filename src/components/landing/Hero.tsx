@@ -30,7 +30,7 @@ export function Hero() {
       return;
     }
 
-    const speed = isDeleting ? 30 : 60;
+    const speed = isDeleting ? 50 : 90;
     const timeout = setTimeout(() => {
       setDisplayText(
         isDeleting
@@ -58,7 +58,7 @@ export function Hero() {
           transition={{ duration: 0.5 }}
           className="mx-auto max-w-4xl text-center"
         >
-          <h1 className="text-4xl font-bold leading-[1.1] tracking-tight sm:text-6xl lg:text-7xl min-h-[1.2em]">
+          <h1 className="text-4xl font-bold leading-[1.1] tracking-tight sm:text-6xl lg:text-7xl min-h-[2.4em] sm:min-h-[2.2em] flex items-center justify-center">
             <span className="bg-gradient-to-r from-[#6366F1] to-[#A78BFA] bg-clip-text text-transparent">
               {displayText}
             </span>
