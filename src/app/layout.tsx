@@ -7,7 +7,11 @@ import { Analytics } from "@vercel/analytics/next";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Free Invoice Generator - Create Professional Invoices in 60 Seconds | InvoiceFlow",
+  metadataBase: new URL("https://invoiceflow.astra.ventures"),
+  title: {
+    template: "%s | InvoiceFlow",
+    default: "Free Invoice Generator - Create Professional Invoices in 60 Seconds",
+  },
   description:
     "Free invoice generator for freelancers and small businesses. Create professional invoices in 60 seconds with no signup required. Include time tracking, recurring invoices, and instant payment links.",
   keywords: [
@@ -34,6 +38,7 @@ export const metadata: Metadata = {
       "Free invoice generator with time tracking, recurring invoices, and payment links. No signup required, just fast professional invoicing.",
     type: "website",
     siteName: "InvoiceFlow",
+    url: "https://invoiceflow.astra.ventures",
     images: [
       {
         url: "/api/og",
