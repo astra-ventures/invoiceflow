@@ -21,6 +21,9 @@ export function Navbar() {
           <Link href="#how-it-works" className="text-sm text-[#9CA3AF] transition-colors hover:text-white">
             How It Works
           </Link>
+          <Link href="/templates" className="text-sm text-[#9CA3AF] transition-colors hover:text-white">
+            Templates
+          </Link>
           <Link href="#pricing" className="text-sm text-[#9CA3AF] transition-colors hover:text-white">
             Pricing
           </Link>
@@ -48,6 +51,7 @@ export function Navbar() {
             <div className="flex flex-col gap-4 px-6 py-6">
               <Link href="#features" className="text-[#9CA3AF] hover:text-white" onClick={() => setMobileOpen(false)}>Features</Link>
               <Link href="#how-it-works" className="text-[#9CA3AF] hover:text-white" onClick={() => setMobileOpen(false)}>How It Works</Link>
+              <Link href="/templates" className="text-[#9CA3AF] hover:text-white" onClick={() => setMobileOpen(false)}>Templates</Link>
               <Link href="#pricing" className="text-[#9CA3AF] hover:text-white" onClick={() => setMobileOpen(false)}>Pricing</Link>
               <Link
                 href="/create"
