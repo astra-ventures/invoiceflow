@@ -27,7 +27,7 @@ export default function UpgradePage() {
       // Redirect to success page
       router.push('/upgrade/success')
     } catch (error) {
-      console.error('Upgrade failed:', error)
+      // TODO: Add proper error notification/toast
       setIsLoading(false)
     }
   }
